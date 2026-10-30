@@ -1,0 +1,2213 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1412">
+<meta name="color-scheme" content="light">
+<title>ECOVOLT · Prototipo digital</title>
+<meta name="description" content="ECOVOLT: prototipo digital de un sistema de enfriamiento residencial con energía solar y tubos subterráneos. Florencia, Caquetá, Colombia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1412'/%3E%3Cpath d='M32 12l14 20H35l4 20-15-22h11z' fill='%23f5b700'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --verde:#1f8a5b;
+    --verde-claro:#3ecf8e;
+    --verde-oscuro:#0f5c3d;
+    --negro:#0b1412;
+    --negro-suave:#12201c;
+    --blanco:#fbfdfb;
+    --amarillo:#f5b700;
+    --gris:#5b6b66;
+    --gris-claro:#8a9995;
+    --linea:rgba(11,20,18,.10);
+    --linea-fuerte:rgba(11,20,18,.18);
+    --radio:18px;
+    --radio-sm:12px;
+    --sombra:0 24px 60px -34px rgba(11,20,18,.4);
+    --sombra-sm:0 10px 30px -20px rgba(11,20,18,.45);
+    --sb:268px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  :root{color-scheme:light}
+  body{
+    font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:var(--blanco);color:var(--negro);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  input,select,textarea{font:inherit;color:inherit}
+  img,svg{display:block;max-width:100%}
+  :focus-visible{outline:2px solid var(--amarillo);outline-offset:2px;border-radius:6px}
+  h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.12;font-weight:700}
+  em{font-style:normal;color:var(--verde)}
+  .ico{width:20px;height:20px;flex:none}
+  .muted{color:var(--gris)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;font-size:.72rem;font-weight:600;
+    letter-spacing:.17em;text-transform:uppercase;color:var(--verde);margin-bottom:12px;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--amarillo);border-radius:2px}
+
+  /* ---------- BOTONES ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:12px 22px;border-radius:100px;font-weight:600;font-size:.92rem;
+    transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:linear-gradient(135deg,var(--verde),var(--verde-oscuro));color:#fff;box-shadow:0 14px 30px -16px rgba(15,92,61,.9)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 34px -16px rgba(15,92,61,.95)}
+  .btn-accent{background:var(--amarillo);color:#3a2c00;box-shadow:0 14px 30px -18px rgba(245,183,0,.95)}
+  .btn-accent:hover{transform:translateY(-2px)}
+  .btn-soft{background:#eef4f0;color:var(--verde-oscuro);border:1px solid rgba(31,138,91,.16)}
+  .btn-soft:hover{background:#e3eee7}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+  .btn-outline{border:1px solid var(--linea-fuerte);color:var(--negro);background:#fff}
+  .btn-outline:hover{border-color:var(--verde);color:var(--verde-oscuro)}
+  .btn-sm{padding:8px 16px;font-size:.82rem}
+  .btn-block{width:100%}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px}
+  .link{
+    color:var(--verde-oscuro);font-weight:600;font-size:.86rem;
+    text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;
+  }
+  .link:hover{color:var(--verde)}
+
+  /* ---------- CAMPOS ---------- */
+  .field{display:grid;gap:6px;margin-bottom:14px}
+  .field label{font-size:.82rem;font-weight:600;letter-spacing:.01em}
+  .field input,.field select,.field textarea{
+    width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--linea-fuerte);
+    background:#fff;font-size:.94rem;transition:border-color .18s,box-shadow .18s;
+  }
+  .field textarea{min-height:110px;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(31,138,91,.14);
+  }
+  .field .help{font-size:.76rem;color:var(--gris-claro)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form-msg{font-size:.84rem;font-weight:500;min-height:0;margin:2px 0 10px;color:#a3231f}
+  .form-msg:empty{display:none}
+  .form-msg.ok{color:var(--verde-oscuro)}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--gris);margin:2px 0 10px;cursor:pointer}
+  .consent input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--verde)}
+
+  /* ---------- AUTENTICACIÓN ---------- */
+  .auth{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:1.05fr .95fr;background:var(--negro)}
+  .auth-visual{
+    position:relative;display:flex;flex-direction:column;justify-content:space-between;
+    padding:clamp(28px,4vw,56px);color:#fff;overflow:hidden;
+    background:
+      radial-gradient(760px 520px at 80% 8%,rgba(62,207,142,.22),transparent 62%),
+      radial-gradient(620px 460px at 4% 92%,rgba(245,183,0,.14),transparent 60%),
+      var(--negro);
+  }
+  .auth-visual::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 60% 40%,#000 0%,transparent 76%);
+  }
+  .auth-visual > *{position:relative;z-index:2}
+  .brand{display:inline-flex;align-items:center;gap:11px;font-weight:800;font-size:1.1rem;letter-spacing:-.02em}
+  .brand .mark{width:36px;height:36px;flex:none}
+  .brand i{font-style:normal;color:var(--verde-claro)}
+  .auth-visual h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.02;letter-spacing:-.045em;font-weight:800;margin:auto 0 18px;max-width:15ch}
+  .auth-visual h1 span{
+    background:linear-gradient(100deg,var(--verde-claro),var(--amarillo));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .auth-visual p{color:rgba(251,253,251,.66);max-width:42ch;font-size:.98rem}
+  .auth-points{list-style:none;display:grid;gap:11px;margin:26px 0 30px;max-width:44ch}
+  .auth-points li{display:flex;gap:11px;align-items:flex-start;font-size:.9rem;color:rgba(251,253,251,.8)}
+  .auth-points .ico{width:18px;height:18px;color:var(--verde-claro);margin-top:3px}
+  .auth-foot{font-size:.76rem;letter-spacing:.06em;color:rgba(251,253,251,.4);text-transform:uppercase}
+  .auth-form-wrap{display:grid;place-items:center;padding:clamp(20px,4vw,48px);background:linear-gradient(180deg,#f2f8f4,var(--blanco))}
+  .auth-card{width:min(420px,100%);background:#fff;border:1px solid var(--linea);border-radius:24px;padding:clamp(22px,3vw,34px);box-shadow:0 36px 80px -50px rgba(11,20,18,.65)}
+  .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#eef4f0;padding:4px;border-radius:100px;margin-bottom:22px}
+  .auth-tab{padding:9px 12px;border-radius:100px;font-size:.86rem;font-weight:600;color:var(--gris);transition:.18s}
+  .auth-tab.active{background:#fff;color:var(--negro);box-shadow:0 4px 12px -6px rgba(11,20,18,.4)}
+  .auth-card h2{font-size:1.45rem;margin-bottom:6px}
+  .auth-card > p{font-size:.88rem;color:var(--gris);margin-bottom:20px}
+  .pass-wrap{position:relative}
+  .pass-wrap input{padding-right:46px}
+  .pass-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;place-items:center;border-radius:9px;color:var(--gris)}
+  .pass-btn:hover{background:#eef4f0;color:var(--verde-oscuro)}
+  .pass-btn .ico{width:18px;height:18px}
+  .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:16px 0 14px}
+  .auth-note{font-size:.74rem;color:var(--gris-claro);line-height:1.5;border-top:1px solid var(--linea);padding-top:14px;margin-top:4px}
+
+  /* ---------- APP SHELL ---------- */
+  .app{display:flex;min-height:100vh;background:var(--blanco)}
+  .sidebar{
+    position:fixed;inset:0 auto 0 0;width:var(--sb);z-index:60;display:flex;flex-direction:column;
+    color:rgba(255,255,255,.68);padding:20px 16px;
+    background:
+      radial-gradient(500px 400px at 20% 0%,rgba(62,207,142,.14),transparent 60%),
+      var(--negro);
+    border-right:1px solid rgba(255,255,255,.07);
+    transition:transform .32s cubic-bezier(.22,.9,.3,1);
+  }
+  .sb-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 6px 18px}
+  .sb-logo{color:#fff}
+  .sb-close{display:none;width:34px;height:34px;border-radius:9px;color:rgba(255,255,255,.6);font-size:1.4rem;line-height:1}
+  .sb-close:hover{background:rgba(255,255,255,.1);color:#fff}
+  .sb-nav{display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1;padding-bottom:10px;scrollbar-width:thin}
+  .sb-group{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32);font-weight:600;padding:16px 12px 7px}
+  .sb-item{
+    display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    padding:10px 12px;border-radius:11px;font-size:.9rem;font-weight:500;color:rgba(255,255,255,.68);
+    transition:background .16s,color .16s;
+  }
+  .sb-item .ico{width:18px;height:18px;opacity:.85}
+  .sb-item:hover{background:rgba(255,255,255,.07);color:#fff}
+  .sb-item.active{background:rgba(62,207,142,.14);color:#fff}
+  .sb-item.active .ico{color:var(--verde-claro);opacity:1}
+  .sb-item .pill{margin-left:auto;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:rgba(245,183,0,.18);color:var(--amarillo);padding:2px 7px;border-radius:100px}
+  .sb-foot{border-top:1px solid rgba(255,255,255,.09);padding-top:14px;display:grid;gap:10px}
+  .sb-user{display:flex;align-items:center;gap:10px;padding:0 4px}
+  .avatar{
+    width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
+    background:rgba(62,207,142,.16);color:var(--verde-claro);font-weight:700;font-size:.82rem;letter-spacing:.04em;
+  }
+  .sb-user-info{min-width:0}
+  .sb-user-info b{display:block;font-size:.85rem;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sb-user-info span{display:block;font-size:.72rem;color:rgba(255,255,255,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sb-logout{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;font-size:.82rem;color:rgba(255,255,255,.55);width:100%}
+  .sb-logout:hover{background:rgba(255,255,255,.07);color:#fff}
+  .scrim{position:fixed;inset:0;background:rgba(6,12,10,.55);backdrop-filter:blur(2px);z-index:55;opacity:0;pointer-events:none;transition:opacity .3s}
+  .drawer-open .scrim{opacity:1;pointer-events:auto}
+  .main{flex:1;min-width:0;margin-left:var(--sb);display:flex;flex-direction:column}
+  .topbar{
+    position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;
+    padding:0 clamp(16px,2.4vw,32px);height:64px;flex:none;
+    background:rgba(251,253,251,.88);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--linea);
+  }
+  .menu-trigger{display:none;width:38px;height:38px;place-items:center;border-radius:10px;border:1px solid var(--linea);background:#fff}
+  .menu-trigger .ico{width:19px;height:19px}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--gris-claro);min-width:0}
+  .crumb strong{color:var(--negro);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crumb .ico{width:14px;height:14px}
+  .top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .chip-demo{
+    display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.02em;
+    color:#6b5200;background:rgba(245,183,0,.14);border:1px solid rgba(245,183,0,.3);
+    padding:5px 11px;border-radius:100px;
+  }
+  .chip-demo::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amarillo)}
+  .btn-guide{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:100px;border:1px solid var(--linea-fuerte);font-size:.8rem;font-weight:600;color:var(--gris);background:#fff}
+  .btn-guide:hover{border-color:var(--verde);color:var(--verde-oscuro)}
+  .btn-guide .ico{width:16px;height:16px}
+  .motion-toggle .dot{width:9px;height:9px;flex:none;border-radius:50%;background:var(--gris-claro);transition:background .2s,box-shadow .2s}
+  .motion-toggle[aria-pressed="true"] .dot{background:var(--verde);box-shadow:0 0 0 3px rgba(31,138,91,.18)}
+  .avatar-sm{
+    width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+    background:var(--negro);color:var(--verde-claro);font-size:.76rem;font-weight:700;letter-spacing:.04em;
+    border:2px solid #fff;box-shadow:0 0 0 1px var(--linea);
+  }
+  .avatar-sm:hover{background:var(--verde-oscuro)}
+  .content{flex:1;width:100%;max-width:1180px;margin-inline:auto;padding:clamp(18px,3vw,38px) clamp(16px,2.6vw,32px) 64px}
+  .screen{display:none}
+  .screen.active{display:block;animation:screenIn .34s cubic-bezier(.22,.9,.3,1)}
+  @keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+  }
+  .motion-off *, .motion-off *::before, .motion-off *::after{
+    animation:none!important;transition:none!important;scroll-behavior:auto!important;
+  }
+</style>
+<style>
+  /* ---------- LAYOUT DE PANTALLAS ---------- */
+  .section-head{max-width:70ch;margin-bottom:clamp(22px,3vw,34px)}
+  .section-head h1{font-size:clamp(1.9rem,3.6vw,2.7rem);margin-bottom:10px}
+  .section-head h2{font-size:clamp(1.55rem,2.9vw,2.15rem);margin-bottom:10px}
+  .section-head h3{font-size:clamp(1.3rem,2.2vw,1.6rem);margin-bottom:8px}
+  .section-head .lead{font-size:clamp(.95rem,1.4vw,1.05rem);color:var(--gris);max-width:62ch}
+  .lead{color:var(--gris)}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .stack{display:grid;gap:18px;align-content:start}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:clamp(18px,2.4vw,26px);box-shadow:var(--sombra-sm)}
+  .card h3{font-size:1.05rem;margin-bottom:6px}
+  .card p{font-size:.9rem;color:var(--gris)}
+  .card p + p{margin-top:8px}
+  .card .card-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:rgba(31,138,91,.1);color:var(--verde-oscuro);margin-bottom:14px}
+  .card .card-ico .ico{width:23px;height:23px}
+  .card.dark{background:var(--negro);border-color:rgba(255,255,255,.1);color:#fff}
+  .card.dark p{color:rgba(255,255,255,.62)}
+  .card.tint{background:linear-gradient(160deg,#fff,#f1f8f4)}
+  .num-badge{font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--verde);text-transform:uppercase}
+
+  /* ---------- INICIO / HERO ---------- */
+  .hero-card{
+    position:relative;overflow:hidden;border-radius:26px;color:#fff;
+    background:
+      radial-gradient(760px 460px at 82% 6%,rgba(62,207,142,.2),transparent 62%),
+      radial-gradient(520px 400px at 4% 94%,rgba(245,183,0,.12),transparent 60%),
+      var(--negro);
+    padding:clamp(24px,4vw,46px);box-shadow:0 40px 90px -60px rgba(11,20,18,.9);
+  }
+  .hero-card::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 40%,#000,transparent 80%);
+  }
+  .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.06fr .94fr;gap:clamp(22px,4vw,48px);align-items:center}
+  .hero-copy .eyebrow{color:var(--verde-claro)}
+  .hero-copy h1{font-size:clamp(1.9rem,4.6vw,3.3rem);line-height:1.01;letter-spacing:-.045em;font-weight:800;margin-bottom:14px}
+  .hero-copy h1 span{background:linear-gradient(100deg,var(--verde-claro),var(--amarillo));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-lead{color:rgba(251,253,251,.7);font-size:clamp(.92rem,1.4vw,1.02rem);max-width:46ch;margin-bottom:22px}
+  .hero-card .btn-primary{background:var(--verde-claro);color:#08130f;box-shadow:0 16px 34px -18px rgba(62,207,142,.9)}
+  .hero-card .btn-primary:hover{box-shadow:0 20px 38px -18px rgba(62,207,142,1)}
+  .hero-stats{display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,36px);margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
+  .hero-stats div strong{display:block;font-size:1.25rem;letter-spacing:-.03em;color:#fff;line-height:1.2}
+  .hero-stats div span{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+  .hero-art{position:relative;display:grid;place-items:center}
+  .hero-art svg{width:100%;height:auto;filter:drop-shadow(0 18px 40px rgba(0,0,0,.35))}
+
+  /* Animaciones del diagrama */
+  .flow-dash{stroke-dasharray:7 11;animation:flowDash 1.9s linear infinite}
+  .flow-slow{stroke-dasharray:2 16;stroke-linecap:round;animation:flowDots 3.1s linear infinite}
+  .sun-rays{transform-box:view-box;transform-origin:78px 66px;animation:spin 70s linear infinite}
+  .sun-glow{animation:glowPulse 4.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  .fan-blades{transform-box:fill-box;transform-origin:center;animation:spin 2.4s linear infinite}
+  .air-rise{animation:rise 2.8s ease-in-out infinite}
+  .air-rise-2{animation-delay:.6s}
+  .air-rise-3{animation-delay:1.2s}
+  .house-body{animation:houseGlow 5.4s ease-in-out infinite}
+  @keyframes flowDash{to{stroke-dashoffset:-18}}
+  @keyframes flowDots{to{stroke-dashoffset:-18}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes glowPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.07)}}
+  @keyframes rise{0%{opacity:0;transform:translateY(8px)}35%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
+  @keyframes houseGlow{0%,100%{fill-opacity:.05}50%{fill-opacity:.1}}
+  .note-bar{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;justify-content:space-between;
+    margin-top:18px;padding:14px 18px;border-radius:14px;font-size:.87rem;color:var(--gris);
+    background:rgba(31,138,91,.055);border:1px solid rgba(31,138,91,.16);
+  }
+  .cta-card{
+    margin-top:22px;border-radius:var(--radio);padding:clamp(20px,3vw,32px);color:#fff;
+    background:linear-gradient(125deg,var(--verde-oscuro),var(--negro) 78%);
+    display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;
+  }
+  .cta-card h3{font-size:clamp(1.05rem,2vw,1.4rem);margin-bottom:4px}
+  .cta-card p{font-size:.88rem;color:rgba(255,255,255,.62);max-width:52ch}
+
+  /* ---------- PROBLEMA ---------- */
+  .temp-card{position:relative;overflow:hidden;border-left:4px solid var(--amarillo)}
+  .temp-card .temp{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+  .temp-card .temp b{font-size:2.7rem;line-height:1;letter-spacing:-.04em;color:var(--verde-oscuro)}
+  .temp-card .temp span{font-size:.82rem;color:var(--gris);font-weight:500}
+  .need-list{list-style:none;display:grid;gap:12px;margin-top:14px}
+  .need-list li{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;font-weight:500}
+  .need-list .ico{width:18px;height:18px;color:var(--verde);margin-top:3px}
+  .compare{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;box-shadow:var(--sombra-sm)}
+  .cmp-head,.cmp-row{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:10px;padding:13px 18px;font-size:.86rem}
+  .cmp-head{background:var(--negro);color:#fff;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+  .cmp-head span:last-child{color:var(--verde-claro)}
+  .cmp-row{border-bottom:1px solid var(--linea);align-items:center}
+  .cmp-row:last-child{border-bottom:0}
+  .cmp-row b{font-weight:600;font-size:.86rem}
+  .cmp-row .bad{color:#a3231f}
+  .cmp-row .good{color:var(--verde-oscuro);font-weight:600}
+  .cmp-note{padding:12px 18px;background:rgba(245,183,0,.08);font-size:.78rem;color:#6b5200;border-top:1px solid rgba(245,183,0,.22)}
+
+  /* ---------- PASOS ---------- */
+  .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .step-btn{
+    display:flex;align-items:center;gap:9px;text-align:left;padding:12px;border-radius:13px;
+    border:1px solid var(--linea);background:#fff;font-size:.86rem;font-weight:600;color:var(--gris);
+    transition:.18s;
+  }
+  .step-btn:hover{border-color:rgba(31,138,91,.4);color:var(--verde-oscuro)}
+  .step-btn .n{
+    width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;
+    background:#eef4f0;font-size:.72rem;font-weight:700;color:var(--verde-oscuro);
+  }
+  .step-btn[aria-selected="true"]{background:var(--negro);border-color:var(--negro);color:#fff}
+  .step-btn[aria-selected="true"] .n{background:rgba(62,207,142,.2);color:var(--verde-claro)}
+  .step-panel{display:grid;grid-template-columns:230px 1fr;gap:clamp(18px,3vw,32px);align-items:center;padding:clamp(20px,3vw,30px)}
+  .step-visual{
+    aspect-ratio:1;border-radius:16px;display:grid;place-items:center;gap:8px;
+    background:radial-gradient(circle at 50% 35%,rgba(62,207,142,.16),transparent 70%),var(--negro);
+    color:var(--verde-claro);text-align:center;
+  }
+  .step-visual .ico{width:56px;height:56px}
+  .step-visual small{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+  .step-panel h3{font-size:1.25rem;margin-bottom:8px}
+  .step-panel p{font-size:.92rem;color:var(--gris);margin-bottom:12px}
+  .step-list{list-style:none;display:grid;gap:8px}
+  .step-list li{display:flex;gap:9px;font-size:.86rem;color:var(--negro);align-items:flex-start}
+  .step-list .ico{width:16px;height:16px;color:var(--verde);margin-top:3px}
+
+  /* ---------- SIMULADOR ---------- */
+  .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .sim-field{display:grid;gap:8px;padding:14px 0;border-bottom:1px dashed var(--linea)}
+  .sim-field:last-of-type{border-bottom:0}
+  .sim-field .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .sim-field label{font-size:.85rem;font-weight:600}
+  .sim-field output{font-size:.92rem;font-weight:700;color:var(--verde-oscuro);font-variant-numeric:tabular-nums}
+  .sim-field .help{font-size:.74rem;color:var(--gris-claro)}
+  input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer}
+  input[type="range"]::-webkit-slider-runnable-track{height:6px;border-radius:100px;background:#e3ece7;border:1px solid rgba(11,20,18,.06)}
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;margin-top:-8px;border-radius:50%;
+    background:#fff;border:3px solid var(--verde);box-shadow:0 2px 8px rgba(11,20,18,.25);
+  }
+  input[type="range"]::-moz-range-track{height:6px;border-radius:100px;background:#e3ece7}
+  input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--verde)}
+  .sim-result{padding:0;overflow:hidden}
+  .result-top{padding:clamp(18px,3vw,26px);background:var(--negro);color:#fff;position:relative;overflow:hidden}
+  .result-top::after{content:"";position:absolute;width:320px;height:320px;right:-120px;top:-140px;border-radius:50%;background:radial-gradient(circle,rgba(62,207,142,.28),transparent 65%)}
+  .result-top .eyebrow{color:var(--verde-claro);margin-bottom:6px}
+  .big-temp{display:flex;align-items:baseline;gap:6px;font-size:clamp(2.6rem,6vw,3.6rem);font-weight:800;letter-spacing:-.05em;line-height:1}
+  .big-temp small{font-size:1.2rem;font-weight:600;color:rgba(255,255,255,.5)}
+  .delta{font-size:.88rem;color:var(--verde-claro);font-weight:600;margin-top:6px}
+  .badge{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 12px;border-radius:100px;font-size:.74rem;font-weight:700;letter-spacing:.03em;background:rgba(62,207,142,.16);color:var(--verde-claro);border:1px solid rgba(62,207,142,.3)}
+  .badge.warn{background:rgba(245,183,0,.16);color:var(--amarillo);border-color:rgba(245,183,0,.32)}
+  .badge.bad{background:rgba(220,80,70,.16);color:#ff9d94;border-color:rgba(220,80,70,.3)}
+  .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--linea)}
+  .mini-grid div{padding:14px 16px;border-right:1px solid var(--linea)}
+  .mini-grid div:last-child{border-right:0}
+  .mini-grid span{display:block;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--gris-claro);margin-bottom:2px}
+  .mini-grid b{font-size:.95rem;letter-spacing:-.01em}
+  .energy{padding:16px 18px;display:grid;gap:9px}
+  .energy h4{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-bottom:2px}
+  .erow{display:flex;justify-content:space-between;gap:12px;font-size:.86rem;color:var(--gris)}
+  .erow b{color:var(--negro);font-weight:600;font-variant-numeric:tabular-nums}
+  .erow b.good{color:var(--verde-oscuro)}
+  .bars{display:grid;gap:6px;margin-top:6px;padding-top:10px;border-top:1px dashed var(--linea)}
+  .bar-row{display:grid;grid-template-columns:64px 1fr 58px;gap:8px;align-items:center;font-size:.72rem;color:var(--gris)}
+  .bar-row b{text-align:right;font-weight:600;color:var(--negro);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;border-radius:100px;background:#eef2f0;overflow:hidden}
+  .bar-fill{display:block;height:100%;border-radius:100px}
+  .bar-fill.eco{background:linear-gradient(90deg,var(--verde-claro),var(--verde));min-width:6%}
+  .bar-fill.ac{background:linear-gradient(90deg,#e88b7d,#c9503f)}
+  .hint{margin:0 18px 14px;padding:11px 13px;border-radius:11px;font-size:.82rem;background:rgba(245,183,0,.1);border:1px solid rgba(245,183,0,.28);color:#6b5200}
+  .disclaimer{margin:0 18px 18px;font-size:.74rem;line-height:1.5;color:var(--gris-claro);border-top:1px solid var(--linea);padding-top:12px}
+  .sim-result .btn-row{padding:0 18px 18px}
+
+  /* ---------- BENEFICIOS / MATERIALES / VALIDACIÓN ---------- */
+  .benefit{display:flex;gap:14px;align-items:flex-start}
+  .benefit .b-ico{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:rgba(31,138,91,.1);color:var(--verde-oscuro)}
+  .materials{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .mat{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:16px 14px;text-align:center;transition:.2s}
+  .mat:hover{transform:translateY(-3px);box-shadow:var(--sombra-sm);border-color:rgba(31,138,91,.3)}
+  .mat .m-ico{width:40px;height:40px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:rgba(31,138,91,.09);color:var(--verde-oscuro)}
+  .mat h4{font-size:.82rem;font-weight:600;margin-bottom:3px}
+  .mat p{font-size:.74rem;color:var(--gris);line-height:1.45}
+  .checks{list-style:none;counter-reset:c;display:grid}
+  .checks li{counter-increment:c;display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--linea)}
+  .checks li:last-child{border-bottom:0}
+  .checks li::before{
+    content:counter(c,decimal-leading-zero);font-weight:700;font-size:.7rem;color:var(--verde);
+    background:rgba(31,138,91,.09);border-radius:7px;padding:6px 7px;flex:none;line-height:1;
+  }
+  .checks b{display:block;font-size:.88rem;font-weight:600;margin-bottom:1px}
+  .checks span{font-size:.8rem;color:var(--gris)}
+  .warn-card{background:var(--negro);color:#fff;border-color:rgba(255,255,255,.1)}
+  .warn-card h3{display:flex;align-items:center;gap:9px;font-size:1rem;margin-bottom:10px}
+  .warn-card h3 .ico{width:19px;height:19px;color:var(--amarillo)}
+  .warn-card p{color:rgba(255,255,255,.62);font-size:.85rem}
+  .warn-card strong{color:#fff}
+  .faq{display:grid;gap:8px;margin-top:14px}
+  .faq details{border:1px solid var(--linea);border-radius:12px;background:#fff;overflow:hidden}
+  .faq summary{
+    list-style:none;cursor:pointer;padding:13px 16px;font-size:.88rem;font-weight:600;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:1.15rem;color:var(--verde);font-weight:500;line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq details[open] summary{background:#f4faf6}
+  .faq .faq-body{padding:0 16px 15px;font-size:.84rem;color:var(--gris)}
+  .req-list{list-style:none;display:grid;gap:9px}
+  .req-list li{display:flex;gap:9px;font-size:.86rem;color:var(--gris);align-items:flex-start}
+  .req-list .ico{width:16px;height:16px;color:var(--verde);margin-top:3px}
+
+  /* ---------- NEGOCIO ---------- */
+  .biz{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;box-shadow:var(--sombra-sm)}
+  .biz-row{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--linea)}
+  .biz-row:last-child{border-bottom:0}
+  .biz-row > div{padding:15px clamp(16px,2.4vw,26px);font-size:.88rem}
+  .biz-key{background:rgba(31,138,91,.05);font-weight:600;display:flex;align-items:center;gap:9px}
+  .biz-key .ico{width:17px;height:17px;color:var(--verde)}
+  .biz-val{color:var(--gris)}
+  .biz-val b{color:var(--negro);font-weight:600}
+
+  /* ---------- MARCA ---------- */
+  .brand-show{
+    display:grid;place-items:center;text-align:center;padding:clamp(24px,4vw,40px);border-radius:var(--radio);
+    background:radial-gradient(circle at 30% 20%,rgba(62,207,142,.16),transparent 60%),var(--negro);
+    border:1px solid rgba(255,255,255,.1);color:#fff;
+  }
+  .brand-show .mark{width:clamp(84px,12vw,118px);height:auto;margin-bottom:14px}
+  .brand-show .word{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:.16em}
+  .brand-show .word i{font-style:normal;color:var(--verde-claro)}
+  .brand-show .tag{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:10px}
+  .palette{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+  .swatch{border-radius:12px;overflow:hidden;border:1px solid var(--linea)}
+  .swatch-color{height:52px}
+  .swatch-label{padding:8px 10px;font-size:.68rem;background:#fff}
+  .swatch-label b{display:block;font-size:.76rem;font-weight:600}
+  .swatch-label span{color:var(--gris-claro);font-size:.66rem}
+  .slogan-box{margin-top:18px;padding-top:16px;border-top:1px solid var(--linea);font-size:clamp(1rem,2vw,1.25rem);font-weight:500;letter-spacing:-.02em}
+  .slogan-box span{color:var(--verde)}
+
+  /* ---------- CONTACTO ---------- */
+  .profile-card h3{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .profile-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--linea);font-size:.86rem}
+  .profile-row span{color:var(--gris-claro);font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+  .profile-row b{font-weight:600;text-align:right;word-break:break-word}
+  .success-card{text-align:center;padding:clamp(24px,4vw,38px)}
+  .success-card .ok-ico{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:rgba(31,138,91,.12);color:var(--verde-oscuro)}
+  .success-card .ok-ico .ico{width:30px;height:30px}
+  .success-card h3{font-size:1.25rem;margin-bottom:6px}
+  .success-card p{font-size:.9rem;color:var(--gris);max-width:44ch;margin:0 auto 8px}
+  .success-summary{margin:16px auto;padding:14px 16px;border-radius:12px;background:#f4faf6;border:1px solid rgba(31,138,91,.18);text-align:left;font-size:.84rem;max-width:400px;display:grid;gap:6px}
+  .success-summary div{display:flex;justify-content:space-between;gap:12px}
+  .success-summary span{color:var(--gris-claro)}
+  .success-summary b{font-weight:600}
+
+  /* ---------- MODAL GUÍA ---------- */
+  dialog{
+    width:min(720px,92vw);max-height:86vh;max-height:86dvh;margin:auto;border:0;border-radius:20px;padding:0;
+    box-shadow:0 40px 90px -40px rgba(11,20,18,.7);color:var(--negro);background:#fff;overflow:hidden;
+  }
+  dialog[open]{display:flex;flex-direction:column}
+  dialog::backdrop{background:rgba(6,12,10,.55);backdrop-filter:blur(3px)}
+  .guide-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 24px 16px;border-bottom:1px solid var(--linea);position:sticky;top:0;background:#fff;z-index:2;flex:none}
+  .guide-head h2{font-size:1.25rem;margin-bottom:3px}
+  .guide-head p{font-size:.82rem;color:var(--gris);max-width:48ch}
+  .guide-close{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;background:#eef4f0;color:var(--gris)}
+  .guide-close:hover{background:#e3eee7;color:var(--negro)}
+  .guide-body{padding:8px 24px 22px;overflow-y:auto;max-height:60vh;flex:1;min-height:0;-webkit-overflow-scrolling:touch}
+  .guide-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--linea);align-items:flex-start}
+  .guide-item:last-child{border-bottom:0}
+  .guide-item .ok{width:20px;height:20px;flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(31,138,91,.12);color:var(--verde-oscuro);margin-top:2px}
+  .guide-item .ok .ico{width:12px;height:12px}
+  .guide-item b{display:block;font-size:.88rem;margin-bottom:2px}
+  .guide-item span{font-size:.8rem;color:var(--gris)}
+  .guide-item .link{margin-left:auto;flex:none;font-size:.78rem;white-space:nowrap}
+  .guide-note{margin-top:16px;padding:12px 14px;border-radius:11px;background:rgba(245,183,0,.1);border:1px solid rgba(245,183,0,.28);font-size:.78rem;color:#6b5200}
+
+  /* ---------- AVISOS (sin JS / error de arranque) ---------- */
+  .nojs{display:block;padding:14px 18px;background:#7a1f1f;color:#fff;font-size:.9rem;line-height:1.5}
+  .nojs a{text-decoration:underline}
+  #bootError{position:fixed;left:12px;right:12px;top:12px;z-index:200;display:flex;gap:12px;align-items:flex-start;background:#7a1f1f;color:#fff;padding:13px 16px;border-radius:12px;font-size:.82rem;line-height:1.45;box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
+  #bootError b{display:block;margin-bottom:3px}
+  #bootError button{margin-left:auto;flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.16);color:#fff;font-weight:700;line-height:1}
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;right:20px;bottom:22px;z-index:90;max-width:min(360px,86vw);
+    display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:13px;
+    background:var(--negro);color:#fff;font-size:.86rem;font-weight:500;
+    box-shadow:0 24px 50px -22px rgba(11,20,18,.8);
+    transform:translateY(16px);opacity:0;pointer-events:none;transition:.28s cubic-bezier(.22,.9,.3,1);
+  }
+  .toast.show{transform:none;opacity:1}
+  .toast .ico{width:18px;height:18px;color:var(--verde-claro);flex:none}
+
+  /* ---------- BARRA MÓVIL ---------- */
+  .mobile-bar{display:none;position:fixed;inset:auto 0 0 0;z-index:45;background:rgba(251,253,251,.94);backdrop-filter:blur(14px);border-top:1px solid var(--linea);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  .mobile-bar .mb-inner{display:flex;justify-content:space-around;align-items:center;gap:2px}
+  .mb-item{display:grid;justify-items:center;gap:2px;padding:6px 8px;border-radius:10px;font-size:.63rem;font-weight:600;color:var(--gris-claro);min-width:52px}
+  .mb-item .ico{width:19px;height:19px}
+  .mb-item.active{color:var(--verde-oscuro);background:rgba(31,138,91,.08)}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1080px){
+    .grid-5{grid-template-columns:repeat(3,1fr)}
+    .materials{grid-template-columns:repeat(3,1fr)}
+    .chip-demo{display:none}
+  }
+  @media (max-width:980px){
+    .sidebar{transform:translateX(-100%)}
+    .drawer-open .sidebar{transform:none}
+    .sb-close{display:grid}
+    .main{margin-left:0}
+    .menu-trigger{display:grid}
+    .hero-grid{grid-template-columns:1fr}
+    .hero-art{order:-1;max-width:420px;margin-inline:auto}
+    .grid-3{grid-template-columns:1fr 1fr}
+    .grid-4{grid-template-columns:1fr 1fr}
+    .sim-grid{grid-template-columns:1fr}
+    .stepper{grid-template-columns:1fr 1fr}
+    .step-panel{grid-template-columns:150px 1fr}
+    .auth{grid-template-columns:1fr}
+    .auth-visual{display:none}
+    .auth-form-wrap{min-height:100svh}
+  }
+  @media (max-width:760px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+    .grid-5,.materials{grid-template-columns:1fr 1fr}
+    .cmp-head,.cmp-row{grid-template-columns:1fr 1fr;font-size:.8rem}
+    .cmp-head span:nth-child(3),.cmp-row span:nth-child(3){display:none}
+    .biz-row{grid-template-columns:1fr}
+    .biz-key{border-bottom:1px solid var(--linea);padding-bottom:8px!important}
+    .biz-row > div:last-child{padding-top:8px}
+    .mobile-bar{display:block}
+    .content{padding-bottom:92px}
+    .field-row{grid-template-columns:1fr}
+    .crumb span{display:none}
+    .btn-guide span{display:none}
+    .btn-guide{padding:0;min-width:40px;min-height:40px;border-radius:50%;justify-content:center}
+    .topbar{gap:10px}
+    .step-panel{grid-template-columns:1fr}
+    .step-visual{aspect-ratio:auto;padding:22px}
+    .mini-grid{grid-template-columns:1fr 1fr}
+    .mini-grid div:last-child{grid-column:span 2;border-top:1px solid var(--linea)}
+    .hero-stats div{flex:1 1 40%}
+    .palette{grid-template-columns:1fr 1fr}
+    .toast{right:12px;left:12px;bottom:76px;max-width:none}
+    .chip-demo{display:none}
+    /* Rendimiento en celulares: menos blur/sombra y sin zoom al escribir */
+    .topbar{background:rgba(251,253,251,.97);backdrop-filter:none;-webkit-backdrop-filter:none}
+    .mobile-bar{background:rgba(251,253,251,.98);backdrop-filter:none;-webkit-backdrop-filter:none}
+    .hero-art svg{filter:none}
+    input:not([type="range"]):not([type="checkbox"]),select,textarea,
+    .field input,.field select,.field textarea{font-size:16px}
+    .auth-form-wrap{min-height:100vh;min-height:100svh}
+    dialog{max-height:88vh;max-height:88dvh;width:calc(100vw - 20px)}
+    .guide-head{padding:18px 18px 12px}
+    .guide-body{padding:6px 18px 18px;max-height:none}
+    .guide-item .link{margin-left:0;flex-basis:100%;padding-left:32px}
+    .guide-item{flex-wrap:wrap}
+  }
+  @media (max-width:420px){
+    .materials{grid-template-columns:1fr}
+    .stepper{grid-template-columns:1fr}
+    .hero-card{padding:20px}
+    .auth-card{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<noscript>
+  <div class="nojs"><b>Este prototipo necesita JavaScript.</b> Si abriste el archivo desde WhatsApp, Drive o la vista previa del celular, descárgalo y ábrelo con Chrome. En computador, ábrelo con Chrome, Edge o Firefox.</div>
+</noscript>
+<div id="bootError" hidden role="alert">
+  <div><b>Se produjo un problema técnico</b><span id="bootErrorText"></span></div>
+  <button type="button" aria-label="Cerrar aviso" onclick="this.parentNode.hidden=true">×</button>
+</div>
+
+<!-- ============ PANTALLA DE ACCESO ============ -->
+<div class="auth" id="authScreen">
+  <div class="auth-visual">
+    <a class="brand" href="#/inicio" aria-label="ECOVOLT">
+      <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#12201c"/>
+        <circle cx="32" cy="30" r="17" stroke="#3ecf8e" stroke-width="2.2" opacity=".55"/>
+        <path d="M32 10v5M32 45v5M12 30h5M47 30h5M18 16l3.5 3.5M42.5 40.5L46 44M46 16l-3.5 3.5M21.5 40.5L18 44" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <path d="M33.5 18 24 33h7l-1 13 10-17h-7l1.5-11Z" fill="#f5b700"/>
+      </svg>
+      ECO<i>VOLT</i>
+    </a>
+
+    <div>
+      <h1>Energía natural, <span>frescura sin igual.</span></h1>
+      <p>Prototipo digital de un sistema que enfría y ventila viviendas con energía solar y la temperatura estable del suelo.</p>
+      <ul class="auth-points">
+        <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Sol, ventilador y tubos subterráneos trabajando juntos.</span></li>
+        <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Simulador para estimar el aire de salida y el consumo.</span></li>
+        <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Alcance real, precauciones y protocolo de pruebas.</span></li>
+      </ul>
+    </div>
+
+    <p class="auth-foot">Florencia, Caquetá · Colombia — Prototipo académico</p>
+  </div>
+
+  <div class="auth-form-wrap">
+    <div class="auth-card">
+      <div class="auth-tabs" role="tablist" aria-label="Modo de acceso">
+        <button class="auth-tab active" id="tabLogin" data-mode="login" role="tab" aria-selected="true">Ingresar</button>
+        <button class="auth-tab" id="tabRegister" data-mode="register" role="tab" aria-selected="false">Crear cuenta</button>
+      </div>
+      <h2 id="authTitle">Bienvenido de nuevo</h2>
+      <p id="authSub">Entra para explorar el prototipo completo de ECOVOLT.</p>
+
+      <form id="authForm" novalidate>
+        <div class="field" id="nameField" hidden>
+          <label for="authName">Nombre completo</label>
+          <input id="authName" type="text" autocomplete="name" placeholder="Ej. Camila Restrepo">
+        </div>
+        <div class="field">
+          <label for="authEmail">Correo electrónico</label>
+          <input id="authEmail" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+        </div>
+        <div class="field">
+          <label for="authPass">Contraseña</label>
+          <div class="pass-wrap">
+            <input id="authPass" type="password" autocomplete="current-password" placeholder="Mínimo 4 caracteres">
+            <button type="button" class="pass-btn" id="passToggle" aria-label="Mostrar contraseña">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="form-msg" id="authMsg" role="alert" aria-live="polite"></p>
+        <button class="btn btn-primary btn-block" type="submit" id="authSubmit">Ingresar</button>
+      </form>
+
+      <button class="btn btn-soft btn-block" id="demoBtn" style="margin-top:10px">Usar cuenta demo</button>
+
+      <div class="auth-links">
+        <button class="link" id="forgotBtn">¿Olvidaste tu contraseña?</button>
+        <button class="link" id="guestBtn">Entrar como invitado</button>
+      </div>
+
+      <p class="auth-note">Prototipo académico: no se envía información a ningún servidor. La sesión se guarda solo en este navegador.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APLICACIÓN ============ -->
+<div class="app" id="app" hidden>
+
+  <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+    <div class="sb-top">
+      <a class="brand sb-logo" href="#/inicio" data-nav="inicio" aria-label="ECOVOLT inicio">
+        <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect width="64" height="64" rx="16" fill="#12201c"/>
+          <circle cx="32" cy="30" r="17" stroke="#3ecf8e" stroke-width="2.2" opacity=".55"/>
+          <path d="M32 10v5M32 45v5M12 30h5M47 30h5M18 16l3.5 3.5M42.5 40.5L46 44M46 16l-3.5 3.5M21.5 40.5L18 44" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+          <path d="M33.5 18 24 33h7l-1 13 10-17h-7l1.5-11Z" fill="#f5b700"/>
+        </svg>
+        ECO<i>VOLT</i>
+      </a>
+      <button class="sb-close" id="sbClose" aria-label="Cerrar menú">&times;</button>
+    </div>
+
+    <nav class="sb-nav">
+      <p class="sb-group">Principal</p>
+      <button class="sb-item" data-nav="inicio">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/><path d="M9.5 21v-6h5v6"/></svg>
+        <span>Inicio</span>
+      </button>
+      <button class="sb-item" data-nav="simulador">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/></svg>
+        <span>Simulador</span>
+        <em class="pill">beta</em>
+      </button>
+
+      <p class="sb-group">El proyecto</p>
+      <button class="sb-item" data-nav="problema">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <span>Problema</span>
+      </button>
+      <button class="sb-item" data-nav="solucion">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.8-5.5 5-6"/></svg>
+        <span>Solución</span>
+      </button>
+      <button class="sb-item" data-nav="funciona">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h5l2-7 3 14 2-7h4"/></svg>
+        <span>Cómo funciona</span>
+      </button>
+      <button class="sb-item" data-nav="beneficios">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.2l5.9-.9L12 3Z"/></svg>
+        <span>Beneficios</span>
+      </button>
+
+      <p class="sb-group">Validación</p>
+      <button class="sb-item" data-nav="validacion">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6M8 4h8v17H8z"/><path d="M9 4V2h6v2"/><path d="m9.5 12 1.8 1.8 3.7-3.7"/></svg>
+        <span>Materiales y pruebas</span>
+      </button>
+      <button class="sb-item" data-nav="negocio">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a1 1 0 0 0-1-1Z"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+        <span>Modelo de negocio</span>
+      </button>
+
+      <p class="sb-group">Marca</p>
+      <button class="sb-item" data-nav="marca">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+        <span>Identidad</span>
+      </button>
+      <button class="sb-item" data-nav="contacto">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+        <span>Contacto</span>
+      </button>
+    </nav>
+
+    <div class="sb-foot">
+      <div class="sb-user">
+        <div class="avatar" id="sbAvatar">EV</div>
+        <div class="sb-user-info">
+          <b id="sbName">Invitado</b>
+          <span id="sbEmail">invitado@ecovolt.co</span>
+        </div>
+      </div>
+      <button class="sb-logout" id="logoutBtn">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-trigger" id="menuTrigger" aria-label="Abrir menú" aria-expanded="false">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="crumb">
+        <span>ECOVOLT</span>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        <strong id="screenTitle">Inicio</strong>
+      </div>
+      <div class="top-actions">
+        <span class="chip-demo">Prototipo · datos simulados</span>
+        <button class="btn-guide motion-toggle" id="motionBtn" aria-pressed="true" aria-label="Animaciones" title="Activar o desactivar animaciones">
+          <i class="dot" aria-hidden="true"></i>
+          <span>Animaciones</span>
+        </button>
+        <button class="btn-guide" id="guideBtn">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 3.6 2.3c-.7.4-1.2 1-1.2 1.9"/><path d="M12 17h.01"/></svg>
+          <span>Guía del prototipo</span>
+        </button>
+        <button class="avatar-sm" id="profileBtn" title="Mi perfil" aria-label="Mi perfil">EV</button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <!-- ============ INICIO ============ -->
+      <section class="screen" data-screen="inicio" id="scr-inicio" aria-labelledby="t-inicio">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow" id="t-inicio">Prototipo digital · Florencia, Caquetá</span>
+              <h1>Energía natural,<br><span>frescura sin igual.</span></h1>
+              <p class="hero-lead">ECOVOLT refresca y ventila tu casa con energía solar y la temperatura estable del suelo. Sin aire acondicionado y sin disparar la factura de luz.</p>
+              <div class="btn-row">
+                <button class="btn btn-primary" data-nav="simulador">
+                  Simular mi hogar
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+                <button class="btn btn-ghost" data-nav="funciona">Ver cómo funciona</button>
+              </div>
+              <div class="hero-stats">
+                <div><strong>100%</strong><span>Energía renovable</span></div>
+                <div><strong>3</strong><span>Componentes clave</span></div>
+                <div><strong>+30&nbsp;°C</strong><span>Clima local</span></div>
+                <div><strong>0</strong><span>Emisiones directas</span></div>
+              </div>
+            </div>
+
+            <div class="hero-art">
+              <svg viewBox="0 0 560 430" role="img" aria-label="Diagrama del sistema ECOVOLT: paneles solares en el techo, ventilador en la vivienda y tubos enterrados por donde circula el aire">
+                <defs>
+                  <linearGradient id="gSun" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#f5b700" stop-opacity=".95"/>
+                    <stop offset="1" stop-color="#f5b700" stop-opacity=".55"/>
+                  </linearGradient>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                    <path d="M0 0 10 5 0 10z" fill="#3ecf8e"/>
+                  </marker>
+                </defs>
+
+                <rect x="0" y="308" width="560" height="122" fill="#3ecf8e" fill-opacity=".05"/>
+                <path d="M0 308h560" stroke="#ffffff" stroke-opacity=".16" stroke-width="1.5" stroke-dasharray="4 7"/>
+
+                <g>
+                  <circle cx="78" cy="66" r="21" fill="url(#gSun)"/>
+                  <g class="sun-rays" stroke="#f5b700" stroke-width="1.8" stroke-linecap="round" opacity=".75">
+                    <path d="M78 30v-9M78 111v-9M42 66h-9M123 66h-9M53 41l-6-6M109 97l-6-6M103 41l6-6M47 97l6-6"/>
+                  </g>
+                  <circle cx="78" cy="66" r="40" class="sun-glow" fill="#f5b700" fill-opacity=".06"/>
+                  <text x="78" y="130" text-anchor="middle" fill="#ffffff" fill-opacity=".38" font-size="10.5" letter-spacing="1.6" font-family="Outfit, sans-serif">SOL</text>
+                </g>
+
+                <g>
+                  <path d="M340 218 426 152 512 218" fill="#3ecf8e" fill-opacity=".1" stroke="#ffffff" stroke-opacity=".55" stroke-width="2" stroke-linejoin="round"/>
+                  <rect x="352" y="214" width="148" height="94" rx="3" class="house-body" fill="#ffffff" fill-opacity=".05" stroke="#ffffff" stroke-opacity=".55" stroke-width="2"/>
+                  <rect x="360" y="238" width="30" height="23" rx="3" fill="#f5b700" fill-opacity=".22" stroke="#f5b700" stroke-opacity=".65" stroke-width="1.4"/>
+                  <rect x="398" y="266" width="30" height="42" rx="3" fill="#3ecf8e" fill-opacity=".1" stroke="#3ecf8e" stroke-opacity=".55" stroke-width="1.4"/>
+
+                  <g transform="rotate(-37.4 383 185)">
+                    <rect x="354" y="172" width="16" height="26" rx="1.5" fill="#0b1412" stroke="#3ecf8e" stroke-opacity=".85" stroke-width="1.4"/>
+                    <rect x="375" y="172" width="16" height="26" rx="1.5" fill="#0b1412" stroke="#3ecf8e" stroke-opacity=".85" stroke-width="1.4"/>
+                    <rect x="396" y="172" width="16" height="26" rx="1.5" fill="#0b1412" stroke="#3ecf8e" stroke-opacity=".85" stroke-width="1.4"/>
+                    <path d="M354 181h58M354 189h58" stroke="#3ecf8e" stroke-opacity=".45" stroke-width="1"/>
+                  </g>
+
+                  <g transform="translate(472 252)">
+                    <g class="fan-blades" stroke="#f5b700" stroke-width="1.9" stroke-linecap="round">
+                      <circle r="13" fill="none" stroke-opacity=".55"/>
+                      <path d="M0 0V-9M7.8 4.5 0 0M-7.8 4.5 0 0"/>
+                    </g>
+                    <circle r="2" fill="#f5b700"/>
+                  </g>
+
+                  <g stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8">
+                    <g transform="translate(440 300)"><path class="air-rise" d="M0 0l5-5 5 5"/></g>
+                    <g transform="translate(440 288)"><path class="air-rise air-rise-2" d="M0 0l5-5 5 5"/></g>
+                    <g transform="translate(440 276)"><path class="air-rise air-rise-3" d="M0 0l5-5 5 5"/></g>
+                  </g>
+                </g>
+
+                <g fill="none" stroke-linecap="round">
+                  <path d="M250 308V342c0 32 34 44 72 44h78c40 0 62-22 62-54v-22" stroke="#3ecf8e" stroke-opacity=".28" stroke-width="9"/>
+                  <path d="M250 308V342c0 32 34 44 72 44h78c40 0 62-22 62-54v-22" stroke="#3ecf8e" stroke-width="3" class="flow-dash"/>
+                  <path d="M250 308V342c0 32 34 44 72 44h78c40 0 62-22 62-54v-22" stroke="#bff5da" stroke-width="3.4" class="flow-slow"/>
+                  <path d="M250 244v64" stroke="#ffffff" stroke-opacity=".4" stroke-width="2.4"/>
+                  <path d="M243 250h14" stroke="#ffffff" stroke-opacity=".55" stroke-width="2.4"/>
+                  <path d="M462 300v-10" stroke="#3ecf8e" stroke-width="2.6" marker-end="url(#arrow)"/>
+                </g>
+
+                <g font-family="Outfit, sans-serif" fill="#ffffff" fill-opacity=".55" font-size="10.5" letter-spacing="1.4">
+                  <text x="430" y="126" text-anchor="middle">PANELES</text>
+                  <text x="430" y="138" text-anchor="middle">SOLARES</text>
+                  <text x="530" y="232" text-anchor="end">VENTILADOR</text>
+                  <text x="178" y="406">TUBOS SUBTERRÁNEOS</text>
+                  <text x="18" y="340">SUELO ≈ 24 °C</text>
+                  <text x="196" y="232" text-anchor="end">AIRE EXTERIOR</text>
+                  <text x="196" y="244" text-anchor="end">31 °C</text>
+                </g>
+
+                <path d="M430 145v34" stroke="#ffffff" stroke-opacity=".2" stroke-width="1" stroke-dasharray="3 4"/>
+                <path d="M500 236h-16" stroke="#ffffff" stroke-opacity=".2" stroke-width="1" stroke-dasharray="3 4"/>
+
+                <g font-family="Outfit, sans-serif" font-size="11" letter-spacing="1.1" fill="#3ecf8e">
+                  <text x="357" y="232" text-anchor="start">AIRE 27 °C</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin-top:clamp(26px,4vw,40px)">
+          <span class="eyebrow">Respuesta directa</span>
+          <h2>¿Qué hace directamente <em>nuestro producto</em>?</h2>
+          <p class="lead">Enfría el aire de la vivienda haciéndolo circular bajo tierra y lo mueve con un ventilador alimentado por paneles solares. Eso es todo: no hay gases refrigerantes ni compresores.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card reveal">
+            <div class="card-ico">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+            </div>
+            <span class="num-badge">Paso 1 · Energía</span>
+            <h3>Paneles solares</h3>
+            <p>Captan la luz del sol y generan la electricidad que alimenta el ventilador durante el día.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-ico">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.5-5 4-5s4 2 4 4.5-2 4.5-5 4.5c-3.5 0-7-2-7-6"/><circle cx="12" cy="12" r="1"/><path d="M8 20c-2 0-3-1-3-3"/></svg>
+            </div>
+            <span class="num-badge">Paso 2 · Movimiento</span>
+            <h3>Ventilador eléctrico</h3>
+            <p>Impulsa el aire exterior a través de los conductos y mantiene un caudal constante hacia la casa.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-ico">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 19c2.5 0 2.5-5 5-5s2.5 5 5 5 2.5-5 5-5"/><path d="M3 12c2.5 0 2.5-5 5-5s2.5 5 5 5 2.5-5 5-5"/></svg>
+            </div>
+            <span class="num-badge">Paso 3 · Intercambio</span>
+            <h3>Tubos subterráneos</h3>
+            <p>El aire recorre tubos enterrados y cede calor al suelo, que se mantiene más fresco que el ambiente.</p>
+          </article>
+        </div>
+
+        <div class="note-bar">
+          <span><strong>Alcance honesto:</strong> no reemplaza un aire acondicionado; mejora la ventilación y el confort con recursos naturales.</span>
+          <button class="link" data-nav="validacion">Ver precauciones y pruebas</button>
+        </div>
+
+        <div class="cta-card">
+          <div>
+            <h3>Refresca tu hogar con energía natural</h3>
+            <p>Estima tu caso en el simulador o solicita una instalación piloto para validar el prototipo en una vivienda real.</p>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-accent" data-nav="contacto">Solicitar piloto</button>
+            <button class="btn btn-ghost" data-nav="marca">Conocer la marca</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROBLEMA ============ -->
+      <section class="screen" data-screen="problema" id="scr-problema" aria-labelledby="t-problema">
+        <div class="section-head">
+          <span class="eyebrow" id="t-problema">El problema</span>
+          <h2>El calor y la humedad incomodan el hogar. <em>Y el aire acondicionado encarece la factura.</em></h2>
+          <p class="lead">En Florencia, Caquetá, las viviendas se vuelven incómodas por el calor y la humedad. Muchas familias recurren al aire acondicionado, lo que aumenta el consumo eléctrico y los gastos del mes.</p>
+        </div>
+
+        <div class="grid-2" style="align-items:start">
+          <div class="stack">
+            <div class="card temp-card">
+              <div class="temp"><b>+30 °C</b><span>clima cálido y húmedo</span></div>
+              <p>El aire acondicionado enfría, pero también incrementa el consumo de electricidad y los gastos familiares. La necesidad es clara: alternativas que usen energía renovable para mejorar la comodidad del hogar.</p>
+            </div>
+
+            <div class="card">
+              <span class="num-badge">Lo que necesita el usuario</span>
+              <ul class="need-list">
+                <li>
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>Alternativas de enfriamiento que aprovechen energía renovable.</span>
+                </li>
+                <li>
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>Mejorar la comodidad sin disparar el consumo eléctrico.</span>
+                </li>
+                <li>
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>Soluciones de ventilación sostenible adaptables a cada vivienda.</span>
+                </li>
+              </ul>
+              <div class="btn-row" style="margin-top:16px">
+                <button class="btn btn-primary btn-sm" data-nav="solucion">Conocer la solución</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="compare">
+            <div class="cmp-head">
+              <span>Aspecto</span><span>Sin ECOVOLT</span><span>Con ECOVOLT</span>
+            </div>
+            <div class="cmp-row">
+              <b>Consumo eléctrico</b><span class="bad">Alto (compresor)</span><span class="good">Bajo (ventilador)</span>
+            </div>
+            <div class="cmp-row">
+              <b>Factura mensual</b><span class="bad">Se incrementa</span><span class="good">Se reduce</span>
+            </div>
+            <div class="cmp-row">
+              <b>Fuente de energía</b><span class="bad">Red eléctrica</span><span class="good">Solar + suelo</span>
+            </div>
+            <div class="cmp-row">
+              <b>Emisiones directas</b><span class="bad">Gases refrigerantes</span><span class="good">Ninguna</span>
+            </div>
+            <div class="cmp-row">
+              <b>Instalación</b><span class="bad">Equipo sellado</span><span class="good">Adaptable al patio</span>
+            </div>
+            <div class="cmp-row">
+              <b>Nivel de frío</b><span class="good">Muy alto</span><span>Moderado</span>
+            </div>
+            <p class="cmp-note">ECOVOLT no busca ganar en potencia de frío, sino en consumo, sostenibilidad y adaptación al clima local.</p>
+          </div>
+        </div>
+
+        <div class="cta-card" style="background:linear-gradient(125deg,var(--negro),var(--verde-oscuro) 120%)">
+          <div>
+            <h3>El problema está claro. Ahora veamos la propuesta.</h3>
+            <p>Tres componentes, dos recursos naturales y un objetivo: confort con bajo consumo.</p>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" data-nav="solucion">Ver la solución</button>
+            <button class="btn btn-ghost" data-nav="simulador">Probar el simulador</button>
+          </div>
+        </div>
+      </section>
+      <!-- ============ SOLUCIÓN ============ -->
+      <section class="screen" data-screen="solucion" id="scr-solucion" aria-labelledby="t-solucion">
+        <div class="section-head">
+          <span class="eyebrow" id="t-solucion">La solución</span>
+          <h2>¿Qué es <em>ECOVOLT</em>?</h2>
+          <p class="lead">Un sistema que combina tres elementos para aprovechar el sol y la temperatura relativamente estable del suelo. Nada más, nada menos.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card tint">
+            <span class="num-badge">01 / Energía</span>
+            <h3 style="margin-top:6px">Paneles solares</h3>
+            <p>Generan electricidad para el ventilador. Al producirse en el lugar, el sistema depende menos de la red eléctrica.</p>
+            <p style="color:var(--verde-oscuro);font-weight:500">Función: alimentar el sistema sin costo por kWh.</p>
+          </article>
+          <article class="card tint">
+            <span class="num-badge">02 / Movimiento</span>
+            <h3 style="margin-top:6px">Ventilador eléctrico</h3>
+            <p>Impulsa el aire exterior a través de los conductos hacia el interior de la vivienda, con un consumo muy bajo.</p>
+            <p style="color:var(--verde-oscuro);font-weight:500">Función: mover el aire y renovarlo.</p>
+          </article>
+          <article class="card tint">
+            <span class="num-badge">03 / Intercambio</span>
+            <h3 style="margin-top:6px">Tubos subterráneos</h3>
+            <p>Permiten que el aire intercambie calor con el suelo antes de entrar a la casa, reduciendo su temperatura si el terreno es favorable.</p>
+            <p style="color:var(--verde-oscuro);font-weight:500">Función: enfriar el aire sin compresor.</p>
+          </article>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px;align-items:start">
+          <div class="card">
+            <h3>Cómo responde al problema</h3>
+            <ul class="need-list">
+              <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Usa energía solar en lugar de la red para mover el aire.</span></li>
+              <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Aprovecha el suelo como disipador natural de calor.</span></li>
+              <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Se adapta a viviendas con patio o espacio exterior.</span></li>
+            </ul>
+          </div>
+          <div class="card dark">
+            <span class="num-badge" style="color:var(--verde-claro)">Diferencial</span>
+            <h3 style="margin-top:6px;color:#fff">Dos recursos naturales, una sola solución</h3>
+            <p>No solo movemos el aire: buscamos aprovechar la energía del sol y la inercia térmica del suelo. Es una propuesta de bajo costo y fácil de prototipar.</p>
+            <div class="btn-row" style="margin-top:16px">
+              <button class="btn btn-primary btn-sm" data-nav="funciona">Ver el recorrido del aire</button>
+              <button class="btn btn-ghost btn-sm" data-nav="simulador">Simular</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CÓMO FUNCIONA ============ -->
+      <section class="screen" data-screen="funciona" id="scr-funciona" aria-labelledby="t-funciona">
+        <div class="section-head">
+          <span class="eyebrow" id="t-funciona">Cómo funciona</span>
+          <h2>Del sol a tu hogar en <em>cuatro pasos</em></h2>
+          <p class="lead">Selecciona un paso para ver qué ocurre. Un recorrido natural: captamos, movemos, intercambiamos y entregamos aire más fresco.</p>
+        </div>
+
+        <div class="stepper" role="tablist" aria-label="Pasos del sistema">
+          <button class="step-btn" data-step="0" role="tab" aria-selected="true"><span class="n">1</span><span>Captación solar</span></button>
+          <button class="step-btn" data-step="1" role="tab" aria-selected="false"><span class="n">2</span><span>Movimiento</span></button>
+          <button class="step-btn" data-step="2" role="tab" aria-selected="false"><span class="n">3</span><span>Intercambio</span></button>
+          <button class="step-btn" data-step="3" role="tab" aria-selected="false"><span class="n">4</span><span>Entrada</span></button>
+        </div>
+
+        <div class="card step-panel" id="stepPanel" aria-live="polite">
+          <div class="step-visual" id="stepVisual">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+            <small id="stepVisualLabel">Paso 1 de 4</small>
+          </div>
+          <div>
+            <h3 id="stepTitle">Captación solar</h3>
+            <p id="stepText">Los paneles solares reciben la luz del sol y generan electricidad para el sistema.</p>
+            <ul class="step-list" id="stepList">
+              <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Genera electricidad durante el día.</span></li>
+              <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Alimenta el ventilador del circuito.</span></li>
+            </ul>
+            <div class="btn-row" style="margin-top:16px">
+              <button class="btn btn-soft btn-sm" id="stepPrev">Anterior</button>
+              <button class="btn btn-primary btn-sm" id="stepNext">Siguiente paso</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:18px">
+          <div class="card">
+            <span class="num-badge">Día</span>
+            <h3 style="margin-top:4px">Con sol</h3>
+            <p>Los paneles producen electricidad y el sistema puede funcionar sin tomar energía de la red.</p>
+          </div>
+          <div class="card">
+            <span class="num-badge">Noche</span>
+            <h3 style="margin-top:4px">Sin sol</h3>
+            <p>Sin baterías, el ventilador se detiene o funciona con la red. Es una limitación del prototipo.</p>
+          </div>
+          <div class="card">
+            <span class="num-badge">Clima</span>
+            <h3 style="margin-top:4px">Humedad alta</h3>
+            <p>El aire húmedo reduce el intercambio de calor y exige drenajes y filtros bien diseñados.</p>
+          </div>
+        </div>
+
+        <div class="note-bar">
+          <span>¿Quieres ver números concretos para tu vivienda? El simulador estima temperatura de salida y consumo.</span>
+          <button class="link" data-nav="simulador">Abrir simulador</button>
+        </div>
+      </section>
+
+      <!-- ============ SIMULADOR ============ -->
+      <section class="screen" data-screen="simulador" id="scr-simulador" aria-labelledby="t-simulador">
+        <div class="section-head">
+          <span class="eyebrow" id="t-simulador">Simulador · datos estimados</span>
+          <h2>Prueba el sistema <em>con tus condiciones</em></h2>
+          <p class="lead">Mueve los controles y observa cómo cambia la temperatura del aire y el consumo eléctrico. Es un modelo educativo, no una medición real.</p>
+        </div>
+
+        <div class="sim-grid">
+          <div class="card">
+            <div class="sim-field">
+              <div class="top"><label for="simText">Temperatura exterior</label><output id="outText">31 °C</output></div>
+              <input type="range" id="simText" min="22" max="40" step="1" value="31" aria-describedby="helpText">
+              <span class="help" id="helpText">Promedio del día en Florencia: 29–33 °C.</span>
+            </div>
+
+            <div class="sim-field">
+              <div class="top"><label for="simHum">Humedad relativa</label><output id="outHum">75 %</output></div>
+              <input type="range" id="simHum" min="40" max="95" step="5" value="75">
+              <span class="help">A mayor humedad, menor intercambio de calor.</span>
+            </div>
+
+            <div class="sim-field">
+              <div class="top"><label for="simLen">Longitud del tubo enterrado</label><output id="outLen">18 m</output></div>
+              <input type="range" id="simLen" min="5" max="40" step="1" value="18">
+              <span class="help">Más recorrido, más tiempo de contacto con el suelo.</span>
+            </div>
+
+            <div class="sim-field">
+              <div class="top"><label for="simHours">Horas de uso al día</label><output id="outHours">8 h</output></div>
+              <input type="range" id="simHours" min="1" max="12" step="1" value="8">
+              <span class="help">El ventilador consume unos 45 W.</span>
+            </div>
+
+            <div class="btn-row" style="margin-top:8px">
+              <button class="btn btn-soft btn-sm" id="simReset">Restablecer valores</button>
+              <button class="btn btn-outline btn-sm" id="simSave">Guardar en mi solicitud</button>
+            </div>
+          </div>
+
+          <div class="card sim-result">
+            <div class="result-top" aria-live="polite">
+              <span class="eyebrow">Temperatura estimada de entrada</span>
+              <div class="big-temp"><span id="resOut">26.6</span><small>°C</small></div>
+              <div class="delta" id="resDelta">−4.4 °C frente al aire exterior</div>
+              <span class="badge" id="resBadge">Buen potencial</span>
+            </div>
+
+            <div class="mini-grid">
+              <div><span>Aire exterior</span><b id="resIn">31 °C</b></div>
+              <div><span>Suelo</span><b>24 °C</b></div>
+              <div><span>Efectividad</span><b id="resEff">62 %</b></div>
+            </div>
+
+            <div class="energy">
+              <h4>Consumo estimado</h4>
+              <div class="erow"><span>Ventilador (45 W)</span><b id="resKwh">10,8 kWh/mes</b></div>
+              <div class="erow"><span>Costo en red</span><b id="resCost">$8.100</b></div>
+              <div class="erow"><span>Ahorro frente a A/A (1.100 W)</span><b class="good" id="resSave">$190.800/mes</b></div>
+              <div class="bars" aria-hidden="true">
+                <div class="bar-row">
+                  <span>ECOVOLT</span>
+                  <div class="bar-track"><i class="bar-fill eco" style="width:6%"></i></div>
+                  <b>45 W</b>
+                </div>
+                <div class="bar-row">
+                  <span>Aire acond.</span>
+                  <div class="bar-track"><i class="bar-fill ac" style="width:100%"></i></div>
+                  <b>1.100 W</b>
+                </div>
+              </div>
+            </div>
+
+            <p class="hint" id="resHint">Configuración razonable para un piloto: el tubo es suficientemente largo y la humedad es manejable.</p>
+
+            <p class="disclaimer">Estimación con un modelo simplificado (suelo a 24 °C, tarifa de $750/kWh). No sustituye una medición de campo: el rendimiento real todavía no está comprobado.</p>
+
+            <div class="btn-row">
+              <button class="btn btn-primary btn-sm" data-nav="contacto">Solicitar instalación piloto</button>
+              <button class="btn btn-soft btn-sm" data-nav="validacion">Ver protocolo de pruebas</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:18px">
+          <div class="card"><span class="num-badge">Fórmula</span><h3 style="margin-top:4px">Intercambio</h3><p>T<sub>salida</sub> = T<sub>exterior</sub> − (T<sub>exterior</sub> − 24 °C) × efectividad. La efectividad crece con la longitud del tubo y baja con la humedad.</p></div>
+          <div class="card"><span class="num-badge">Fórmula</span><h3 style="margin-top:4px">Consumo</h3><p>kWh/mes = potencia del ventilador × horas de uso × 30 días ÷ 1.000.</p></div>
+          <div class="card"><span class="num-badge">Uso</span><h3 style="margin-top:4px">¿Para qué sirve?</h3><p>Para comparar escenarios y entender qué variable pesa más antes de invertir en el prototipo físico.</p></div>
+        </div>
+      </section>
+      <!-- ============ BENEFICIOS ============ -->
+      <section class="screen" data-screen="beneficios" id="scr-beneficios" aria-labelledby="t-beneficios">
+        <div class="section-head">
+          <span class="eyebrow" id="t-beneficios">Beneficios</span>
+          <h2>Comodidad que <em>aprovecha la naturaleza</em></h2>
+          <p class="lead">Ventajas pensadas para hogares que buscan refrescarse de forma más consciente, sin prometer más de lo que el sistema puede dar.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card benefit">
+            <div class="b-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+            <div>
+              <h3>Ahorro energético potencial</h3>
+              <p>La energía solar puede alimentar el ventilador y reducir la electricidad que este toma de la red.</p>
+            </div>
+          </div>
+          <div class="card benefit">
+            <div class="b-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 5v7h7"/><path d="M12 8v4l3 2"/></svg></div>
+            <div>
+              <h3>Mayor comodidad</h3>
+              <p>Busca proporcionar aire más fresco y favorecer la ventilación del hogar, sobre todo en las horas de calor.</p>
+            </div>
+          </div>
+          <div class="card benefit">
+            <div class="b-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.8-5.5 5-6"/></svg></div>
+            <div>
+              <h3>Beneficio ambiental</h3>
+              <p>Aprovecha una fuente renovable y puede disminuir parte del consumo eléctrico convencional de la vivienda.</p>
+            </div>
+          </div>
+          <div class="card benefit">
+            <div class="b-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5 2.5-2.5-.5-.5Z"/></svg></div>
+            <div>
+              <h3>Posibilidad de adaptación</h3>
+              <p>El diseño puede estudiarse para diferentes viviendas según el terreno, los materiales y el presupuesto.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card dark" style="margin-top:18px">
+          <div class="grid-2" style="align-items:center;gap:20px">
+            <div>
+              <span class="eyebrow" style="color:var(--verde-claro)">Ahorro estimado</span>
+              <h3 style="color:#fff;font-size:clamp(1.15rem,2vw,1.5rem)">Menos watts, misma sensación de frescura</h3>
+              <p>Un ventilador de 45 W frente a un aire acondicionado de 1.100 W: la diferencia de consumo es el argumento central de ECOVOLT.</p>
+            </div>
+            <div class="btn-row" style="justify-content:flex-end">
+              <button class="btn btn-primary" data-nav="simulador">Calcular mi caso</button>
+              <button class="btn btn-ghost" data-nav="negocio">Ver modelo de negocio</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-top:18px">
+          <div class="card"><span class="num-badge">01</span><h3 style="margin-top:4px">Bajo consumo</h3><p>Solo mueve aire; no comprime refrigerantes.</p></div>
+          <div class="card"><span class="num-badge">02</span><h3 style="margin-top:4px">Materiales simples</h3><p>Panel, ventilador, tubos y filtros.</p></div>
+          <div class="card"><span class="num-badge">03</span><h3 style="margin-top:4px">Prototipo barato</h3><p>Se puede probar a pequeña escala.</p></div>
+          <div class="card"><span class="num-badge">04</span><h3 style="margin-top:4px">Medible</h3><p>Temperatura, caudal y consumo.</p></div>
+        </div>
+      </section>
+
+      <!-- ============ MATERIALES Y VALIDACIÓN ============ -->
+      <section class="screen" data-screen="validacion" id="scr-validacion" aria-labelledby="t-validacion">
+        <div class="section-head">
+          <span class="eyebrow" id="t-validacion">Validación</span>
+          <h2>Lo que compone el prototipo <em>y cómo lo probamos</em></h2>
+          <p class="lead">Un protocolo sencillo y medible para dar credibilidad a la propuesta antes de hablar de precios o instalaciones reales.</p>
+        </div>
+
+        <div class="materials">
+          <div class="mat">
+            <div class="m-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg></div>
+            <h4>Panel solar</h4><p>Genera electricidad.</p>
+          </div>
+          <div class="mat">
+            <div class="m-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.5-5 4-5s4 2 4 4.5-2 4.5-5 4.5c-3.5 0-7-2-7-6"/><circle cx="12" cy="12" r="1"/><path d="M8 20c-2 0-3-1-3-3"/></svg></div>
+            <h4>Ventilador</h4><p>Impulsa el aire.</p>
+          </div>
+          <div class="mat">
+            <div class="m-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 8h10a3 3 0 1 0-3-3"/><path d="M4 12h14a3 3 0 1 1-3 3"/><path d="M4 16h6"/></svg></div>
+            <h4>Tubos y conexiones</h4><p>Transportan el aire.</p>
+          </div>
+          <div class="mat">
+            <div class="m-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></svg></div>
+            <h4>Filtros y rejillas</h4><p>Retienen partículas.</p>
+          </div>
+          <div class="mat">
+            <div class="m-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/><path d="M12 9v6"/></svg></div>
+            <h4>Termómetro e higrómetro</h4><p>Miden las pruebas.</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px;align-items:start">
+          <div class="card">
+            <h3>Protocolo de pruebas</h3>
+            <ul class="checks">
+              <li><div><b>Temperatura de entrada</b><span>Medir el aire antes de entrar a los tubos.</span></div></li>
+              <li><div><b>Temperatura de salida</b><span>Medir el aire después de recorrer los tubos.</span></div></li>
+              <li><div><b>Caudal de aire</b><span>Comprobar cuánto aire mueve el ventilador.</span></div></li>
+              <li><div><b>Consumo eléctrico</b><span>Registrar la electricidad que consume el sistema.</span></div></li>
+              <li><div><b>Humedad y condensación</b><span>Revisar la humedad dentro de los tubos.</span></div></li>
+            </ul>
+            <div class="btn-row" style="margin-top:14px">
+              <button class="btn btn-soft btn-sm" data-nav="simulador">Comparar con el simulador</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card warn-card">
+              <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>Importante</h3>
+              <p>El rendimiento <strong>todavía no está comprobado</strong>. En un clima húmedo como el de Florencia, los tubos deben diseñarse para evitar acumulación de agua, suciedad y moho.</p>
+              <p>Este sistema <strong>no garantiza enfriar tanto como un aire acondicionado</strong>. Su valor está en la ventilación y el aprovechamiento de recursos naturales.</p>
+            </div>
+
+            <div class="card">
+              <h3>Precauciones: ¿qué pasa cuando…?</h3>
+              <div class="faq">
+                <details>
+                  <summary>…llueve mucho o el terreno se inunda?</summary>
+                  <div class="faq-body">Los tubos deben quedar con pendiente y drenaje. Si entra agua, aparecen hongos y el aire llega con olor. Habría que sellar la captación y revisar el sistema después de cada temporada de lluvias.</div>
+                </details>
+                <details>
+                  <summary>…hay semanas sin sol suficiente?</summary>
+                  <div class="faq-body">Sin baterías, el ventilador se detiene o consume de la red. El ahorro baja, pero el sistema no se daña. Una batería pequeña aumentaría el costo del prototipo.</div>
+                </details>
+                <details>
+                  <summary>…el suelo es rocoso o el patio es pequeño?</summary>
+                  <div class="faq-body">Se necesitan entre 15 y 30 m de tubo. Si no hay espacio, el intercambio cae y el sistema pierde sentido: conviene evaluar otra alternativa antes de instalar.</div>
+                </details>
+                <details>
+                  <summary>…la humedad interior sube demasiado?</summary>
+                  <div class="faq-body">El aire húmedo se siente más caliente y favorece el moho. Hay que medir humedad relativa, ventilar por la mañana y usar filtros secos y limpiables.</div>
+                </details>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Requisitos del usuario</h3>
+              <ul class="req-list">
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Vivienda con patio, solar o espacio para enterrar el tubo.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Al menos 4–5 horas de sol al día en el punto de instalación.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Presupuesto para un piloto y disposición a medir resultados.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Expectativa realista: ventilación y confort, no frío de aire acondicionado.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ NEGOCIO ============ -->
+      <section class="screen" data-screen="negocio" id="scr-negocio" aria-labelledby="t-negocio">
+        <div class="section-head">
+          <span class="eyebrow" id="t-negocio">Modelo de negocio</span>
+          <h2>Una propuesta <em>sostenible y viable</em></h2>
+          <p class="lead">ECOVOLT podría desarrollar y ofrecer soluciones de ventilación solar para viviendas interesadas en alternativas de enfriamiento.</p>
+        </div>
+
+        <div class="biz">
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg>Producto</div>
+            <div class="biz-val"><b>Sistema de ventilación solar</b> con tubos subterráneos.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>Clientes</div>
+            <div class="biz-val">Familias con viviendas calurosas en Florencia y municipios cercanos.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 8.5l7 .9-5 4.8 1.2 7L12 17.8 5.8 21.2 7 14.2l-5-4.8 7-.9L12 2Z"/></svg>Propuesta de valor</div>
+            <div class="biz-val">Aprovechar energía renovable para mejorar la ventilación con bajo consumo.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-3V5a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3v2H4a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a1 1 0 0 0-1-1Z"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Recursos principales</div>
+            <div class="biz-val">Panel solar, ventilador, tubos y filtros.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Costos principales</div>
+            <div class="biz-val">Materiales, instalación, mantenimiento y pruebas.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6 13.5 15.5 8.5 10.5 1 18"/><path d="M17 6h6v6"/></svg>Ingresos posibles</div>
+            <div class="biz-val">Venta del sistema e instalación, una vez validado.</div>
+          </div>
+          <div class="biz-row">
+            <div class="biz-key"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Aliados</div>
+            <div class="biz-val">Talleres de instalación, proveedores solares y universidades locales.</div>
+          </div>
+        </div>
+
+        <div class="note-bar">
+          <span>Los precios y los ahorros reales tendrían que calcularse después de diseñar y probar el prototipo.</span>
+          <button class="link" data-nav="contacto">Quiero ser caso piloto</button>
+        </div>
+      </section>
+      <!-- ============ MARCA ============ -->
+      <section class="screen" data-screen="marca" id="scr-marca" aria-labelledby="t-marca">
+        <div class="section-head">
+          <span class="eyebrow" id="t-marca">Identidad de marca</span>
+          <h2>Moderno, ecológico <em>y tecnológico</em></h2>
+          <p class="lead">Una identidad visual clara que comunica sostenibilidad, innovación y confianza.</p>
+        </div>
+
+        <div class="grid-2" style="align-items:start">
+          <div class="brand-show">
+            <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <rect width="64" height="64" rx="16" fill="#12201c"/>
+              <circle cx="32" cy="30" r="17" stroke="#3ecf8e" stroke-width="2.2" opacity=".55"/>
+              <path d="M32 10v5M32 45v5M12 30h5M47 30h5M18 16l3.5 3.5M42.5 40.5L46 44M46 16l-3.5 3.5M21.5 40.5L18 44" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+              <path d="M33.5 18 24 33h7l-1 13 10-17h-7l1.5-11Z" fill="#f5b700"/>
+            </svg>
+            <div class="word">ECO<i>VOLT</i></div>
+            <div class="tag">Energía natural, frescura sin igual</div>
+          </div>
+
+          <div class="card">
+            <h3>Paleta de color</h3>
+            <p>Cada color tiene un significado dentro del sistema.</p>
+            <div class="palette">
+              <div class="swatch">
+                <div class="swatch-color" style="background:#1f8a5b"></div>
+                <div class="swatch-label"><b>Verde</b><span>Naturaleza</span></div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#0b1412"></div>
+                <div class="swatch-label"><b>Negro</b><span>Tecnología</span></div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#fbfdfb"></div>
+                <div class="swatch-label"><b>Blanco</b><span>Claridad</span></div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background:#f5b700"></div>
+                <div class="swatch-label"><b>Amarillo</b><span>Energía solar</span></div>
+              </div>
+            </div>
+            <div class="slogan-box">«Energía natural, <span>frescura sin igual</span>».</div>
+            <div class="btn-row" style="margin-top:16px">
+              <button class="btn btn-primary btn-sm" data-nav="contacto">Usar la marca en mi proyecto</button>
+              <button class="btn btn-soft btn-sm" data-nav="inicio">Volver al inicio</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:18px">
+          <div class="card"><span class="num-badge">Tono</span><h3 style="margin-top:4px">Claro y honesto</h3><p>Sin prometer frío industrial. Se explican límites y se habla de validación.</p></div>
+          <div class="card"><span class="num-badge">Voz</span><h3 style="margin-top:4px">Cercana</h3><p>Habla de hogar, familia y ahorro, no solo de tecnología.</p></div>
+          <div class="card"><span class="num-badge">Uso</span><h3 style="margin-top:4px">Logo + claim</h3><p>El rayo amarillo representa la energía; el círculo verde, el suelo y el aire.</p></div>
+        </div>
+      </section>
+
+      <!-- ============ CONTACTO ============ -->
+      <section class="screen" data-screen="contacto" id="scr-contacto" aria-labelledby="t-contacto">
+        <div class="section-head">
+          <span class="eyebrow" id="t-contacto">Contacto</span>
+          <h2>Refresca tu hogar con <em>energía natural</em></h2>
+          <p class="lead">Si te interesa conocer el proyecto, validar el prototipo o explorar una instalación piloto, cuéntanos tu caso. Cada campo tiene una función dentro del prototipo.</p>
+        </div>
+
+        <div class="grid-2" style="align-items:start">
+          <div class="card" id="contactCard">
+            <h3>Cuéntanos tu caso</h3>
+            <p style="margin-bottom:16px">Los datos se usan solo para simular la solicitud en este prototipo.</p>
+
+            <form id="contactForm" novalidate>
+              <div class="field-row">
+                <div class="field">
+                  <label for="cName">Nombre</label>
+                  <input id="cName" type="text" autocomplete="name" placeholder="Tu nombre">
+                </div>
+                <div class="field">
+                  <label for="cEmail">Correo</label>
+                  <input id="cEmail" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="cInterest">¿Qué te interesa?</label>
+                <select id="cInterest">
+                  <option value="Conocer el proyecto">Conocer el proyecto</option>
+                  <option value="Validar el prototipo">Validar el prototipo</option>
+                  <option value="Instalación piloto" selected>Instalación piloto</option>
+                  <option value="Colaborar con el equipo">Colaborar con el equipo</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="cMessage">Mensaje</label>
+                <textarea id="cMessage" placeholder="Ej. Vivo en Florencia, tengo patio de 4 × 6 m y quiero probar el sistema..."></textarea>
+                <span class="help">Mínimo 10 caracteres. Cuéntanos tipo de vivienda y espacio disponible.</span>
+              </div>
+
+              <label class="consent">
+                <input type="checkbox" id="cConsent">
+                <span>Acepto que estos datos se usen para simular la solicitud dentro del prototipo.</span>
+              </label>
+
+              <p class="form-msg" id="contactMsg" role="alert" aria-live="polite"></p>
+
+              <div class="btn-row">
+                <button class="btn btn-primary" type="submit">
+                  Enviar solicitud
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+                <button class="btn btn-soft" type="button" id="useMyData">Usar mis datos</button>
+                <a class="btn btn-outline" href="mailto:contacto@ecovolt.co">Escribir correo</a>
+              </div>
+            </form>
+          </div>
+
+          <div class="card success-card" id="contactSuccess" hidden>
+            <div class="ok-ico">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <h3>Solicitud registrada</h3>
+            <p>Esto es una simulación del prototipo: no se envió ningún correo. La información queda solo en esta pantalla.</p>
+            <div class="success-summary" id="successSummary"></div>
+            <div class="btn-row" style="justify-content:center">
+              <button class="btn btn-soft btn-sm" id="anotherRequest">Enviar otra solicitud</button>
+              <a class="btn btn-outline btn-sm" href="mailto:contacto@ecovolt.co">Enviar por correo real</a>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card profile-card">
+              <h3>
+                <span class="avatar" id="profileAvatar">EV</span>
+                <span id="profileName">Invitado</span>
+              </h3>
+              <div class="profile-row"><span>Correo</span><b id="profileEmail">invitado@ecovolt.co</b></div>
+              <div class="profile-row"><span>Tipo de sesión</span><b id="profileType">Invitado</b></div>
+              <div class="profile-row"><span>Ubicación</span><b>Florencia, Caquetá</b></div>
+              <div class="profile-row"><span>Interés</span><b id="profileInterest">Instalación piloto</b></div>
+              <div class="btn-row" style="margin-top:16px">
+                <button class="btn btn-soft btn-sm" id="editProfile">Editar mis datos</button>
+                <button class="btn btn-outline btn-sm" id="logoutBtn2">Cerrar sesión</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Qué pasa después</h3>
+              <ul class="req-list">
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Se revisa el espacio disponible y las horas de sol.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Se propone un prototipo pequeño y medible.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Se comparan temperatura, caudal y consumo reales.</span></li>
+                <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Solo con resultados se calculan precios y ahorros.</span></li>
+              </ul>
+              <div class="btn-row" style="margin-top:14px">
+                <button class="btn btn-outline btn-sm" data-nav="validacion">Ver protocolo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-bar" aria-label="Navegación rápida">
+      <div class="mb-inner">
+        <button class="mb-item" data-nav="inicio">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/></svg>
+          <span>Inicio</span>
+        </button>
+        <button class="mb-item" data-nav="simulador">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/></svg>
+          <span>Simular</span>
+        </button>
+        <button class="mb-item" data-nav="funciona">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h5l2-7 3 14 2-7h4"/></svg>
+          <span>Pasos</span>
+        </button>
+        <button class="mb-item" data-nav="validacion">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6M8 4h8v17H8z"/><path d="m9.5 12 1.8 1.8 3.7-3.7"/></svg>
+          <span>Pruebas</span>
+        </button>
+        <button class="mb-item" data-nav="contacto">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+          <span>Contacto</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<!-- ============ GUÍA DEL PROTOTIPO ============ -->
+<dialog id="guideDialog" aria-labelledby="guideTitle">
+  <div class="guide-head">
+    <div>
+      <h2 id="guideTitle">Guía del prototipo</h2>
+      <p>Así cumple ECOVOLT los puntos de la actividad «Diseño de prototipo digital».</p>
+    </div>
+    <button class="guide-close" id="guideClose" aria-label="Cerrar guía">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="guide-body">
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Se entiende el propósito</b><span>El inicio responde en una frase qué hace el producto y para quién.</span></div>
+      <button class="link" data-nav="inicio">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Usuario identificado</b><span>Hay pantalla de acceso con nombre y correo; esos datos se reutilizan en el contacto.</span></div>
+      <button class="link" data-nav="contacto">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>La solución responde al problema</b><span>Problema → Solución → Cómo funciona, con un comparativo claro.</span></div>
+      <button class="link" data-nav="problema">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Mínimo 4 botones con función</b><span>Navegación, login, simulador, guardar, enviar, filtrar pasos y cerrar sesión.</span></div>
+      <button class="link" data-nav="simulador">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Login y pantallas de login</b><span>Ingresar, crear cuenta, cuenta demo, invitado y recuperar contraseña.</span></div>
+      <button class="link" data-nav="inicio">Ir</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Cada elemento tiene una función</b><span>Los controles calculan, los pasos cambian de contenido y el formulario valida y responde.</span></div>
+      <button class="link" data-nav="funciona">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Pantallas ordenadas</b><span>10 pantallas agrupadas en Principal, El proyecto, Validación y Marca.</span></div>
+      <button class="link" data-nav="marca">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Textos legibles e imágenes pertinentes</b><span>Tipografía amplia y diagramas SVG del sistema, no decoración genérica.</span></div>
+      <button class="link" data-nav="solucion">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Navegación completa</b><span>Menú lateral, barra móvil, historial del navegador y botones de avance.</span></div>
+      <button class="link" data-nav="negocio">Ver</button>
+    </div>
+    <div class="guide-item">
+      <span class="ok"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div><b>Precauciones y requisitos</b><span>Qué pasa si llueve, no hay sol o el suelo es rocoso + requisitos del usuario.</span></div>
+      <button class="link" data-nav="validacion">Ver</button>
+    </div>
+    <p class="guide-note">Este prototipo es académico: los cálculos son estimaciones, el envío de la solicitud se simula y el rendimiento real aún no está comprobado.</p>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastText">Listo</span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------------- Aviso de error de arranque ---------------- */
+  function showBootError(message) {
+    const box = document.getElementById('bootError');
+    const text = document.getElementById('bootErrorText');
+    if (!box || !text) return;
+    text.textContent = (message ? 'Detalle: ' + message + '. ' : '') +
+      'Si abriste el archivo desde WhatsApp, Drive o la vista previa del celular, descárgalo y ábrelo con Chrome.';
+    box.hidden = false;
+  }
+  window.addEventListener('error', function (event) {
+    showBootError(event && event.message ? event.message : 'error desconocido');
+  });
+
+  /* ---------------- Utilidades ---------------- */
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const KEY = 'ecovolt.session.v1';
+  const memory = { value: null };
+
+  const store = {
+    get() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return memory.value; }
+    },
+    set(value) {
+      memory.value = value;
+      try {
+        if (value) localStorage.setItem(KEY, JSON.stringify(value));
+        else localStorage.removeItem(KEY);
+      } catch (e) { /* almacenamiento bloqueado: se usa memoria */ }
+    }
+  };
+
+  const TITLES = {
+    inicio: 'Inicio',
+    simulador: 'Simulador',
+    problema: 'Problema',
+    solucion: 'Solución',
+    funciona: 'Cómo funciona',
+    beneficios: 'Beneficios',
+    validacion: 'Materiales y pruebas',
+    negocio: 'Modelo de negocio',
+    marca: 'Identidad',
+    contacto: 'Contacto'
+  };
+
+  const screens = $$('.screen');
+  const VALID = screens.map(s => s.dataset.screen);
+  const authScreen = $('#authScreen');
+  const app = $('#app');
+  const guideDialog = $('#guideDialog');
+
+  let user = store.get();
+  let current = 'inicio';
+  let toastTimer = null;
+  let lastSim = null;
+
+  function toast(text) {
+    $('#toastText').textContent = text;
+    const box = $('#toast');
+    box.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => box.classList.remove('show'), 3400);
+  }
+
+  function initials(name) {
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'EV';
+    return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+  }
+
+  function firstName(name) {
+    const part = String(name || '').trim().split(/\s+/)[0];
+    return part || 'de nuevo';
+  }
+
+  /* ---------------- Navegación ---------------- */
+  function screenFromHash() {
+    const id = (location.hash || '').replace(/^#\/?/, '');
+    return VALID.indexOf(id) !== -1 ? id : 'inicio';
+  }
+
+  function go(id, updateHash) {
+    if (!user) { showAuth(); return; }
+    if (VALID.indexOf(id) === -1) id = 'inicio';
+    current = id;
+
+    screens.forEach(s => s.classList.toggle('active', s.dataset.screen === id));
+    $$('.sb-item, .mb-item').forEach(el => {
+      const on = el.dataset.nav === id;
+      el.classList.toggle('active', on);
+      if (on) el.setAttribute('aria-current', 'page');
+      else el.removeAttribute('aria-current');
+    });
+
+    $('#screenTitle').textContent = TITLES[id] || 'Inicio';
+    document.title = 'ECOVOLT · ' + (TITLES[id] || 'Inicio');
+
+    if (updateHash !== false && location.hash !== '#/' + id) {
+      try {
+        history.pushState(null, '', '#/' + id);
+      } catch (e) {
+        // Algunos navegadores móviles bloquean pushState en file:// o content://
+        try { location.hash = '#/' + id; } catch (e2) { /* la navegación sigue sin cambiar la URL */ }
+      }
+    }
+    closeDrawer();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function navigate(id) {
+    if (!user) { showAuth(); return; }
+    if (location.hash === '#/' + id) { go(id, false); return; }
+    try {
+      location.hash = '#/' + id;
+    } catch (e) {
+      go(id, false);
+    }
+  }
+
+  function openDrawer() {
+    document.body.classList.add('drawer-open');
+    $('#menuTrigger').setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer() {
+    document.body.classList.remove('drawer-open');
+    const trigger = $('#menuTrigger');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  /* ---------------- Sesión ---------------- */
+  function renderUser() {
+    if (!user) return;
+    const name = user.name || 'Invitado';
+    const email = user.email || 'invitado@ecovolt.co';
+    const type = user.guest ? 'Invitado' : (user.demo ? 'Cuenta demo' : 'Cuenta registrada');
+
+    $('#sbAvatar').textContent = initials(name);
+    $('#sbName').textContent = name;
+    $('#sbEmail').textContent = email;
+    $('#profileAvatar').textContent = initials(name);
+    $('#profileName').textContent = name;
+    $('#profileEmail').textContent = email;
+    $('#profileType').textContent = type;
+
+    $$('.avatar-sm').forEach(el => { el.textContent = initials(name); });
+    $('#cName').value = name === 'Invitado' ? '' : name;
+    $('#cEmail').value = user.guest ? '' : email;
+  }
+
+  function enterApp() {
+    authScreen.hidden = true;
+    app.hidden = false;
+    renderUser();
+    go(screenFromHash(), true);
+  }
+
+  function showAuth() {
+    app.hidden = true;
+    authScreen.hidden = false;
+  }
+
+  function logout() {
+    user = null;
+    store.set(null);
+    showAuth();
+    setMode('login');
+    $('#authEmail').value = '';
+    $('#authPass').value = '';
+    $('#authName').value = '';
+    setAuthMsg('');
+    toast('Sesión cerrada');
+  }
+
+  /* ---------------- Pantalla de acceso ---------------- */
+  let mode = 'login';
+
+  function setAuthMsg(text, ok) {
+    const box = $('#authMsg');
+    box.textContent = text || '';
+    box.classList.toggle('ok', !!ok);
+  }
+
+  function setMode(next) {
+    mode = next;
+    $$('.auth-tab').forEach(tab => {
+      const on = tab.dataset.mode === next;
+      tab.classList.toggle('active', on);
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $('#nameField').hidden = next !== 'register';
+    $('#authTitle').textContent = next === 'login' ? 'Bienvenido de nuevo' : 'Crea tu cuenta';
+    $('#authSub').textContent = next === 'login'
+      ? 'Entra para explorar el prototipo completo de ECOVOLT.'
+      : 'Solo necesitamos un nombre y un correo para personalizar la experiencia.';
+    $('#authSubmit').textContent = next === 'login' ? 'Ingresar' : 'Crear cuenta y entrar';
+    $('#authPass').setAttribute('autocomplete', next === 'login' ? 'current-password' : 'new-password');
+    setAuthMsg('');
+  }
+
+  $('#authForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('#authName').value.trim();
+    const email = $('#authEmail').value.trim();
+    const pass = $('#authPass').value;
+    const problems = [];
+
+    if (mode === 'register' && name.length < 2) problems.push('escribe tu nombre');
+    if (!EMAIL_RE.test(email)) problems.push('revisa el correo electrónico');
+    if (pass.length < 4) problems.push('la contraseña necesita 4 caracteres o más');
+
+    if (problems.length) {
+      setAuthMsg('Para continuar, ' + problems.join(' · ') + '.');
+      return;
+    }
+
+    const displayName = mode === 'register'
+      ? name
+      : email.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    user = { name: displayName, email: email, guest: false, demo: false };
+    store.set(user);
+    setAuthMsg('');
+    enterApp();
+    toast('Bienvenido, ' + firstName(displayName));
+  });
+
+  $('#demoBtn').addEventListener('click', () => {
+    user = { name: 'Camila Restrepo', email: 'demo@ecovolt.co', guest: false, demo: true };
+    store.set(user);
+    enterApp();
+    toast('Entraste con la cuenta demo');
+  });
+
+  $('#guestBtn').addEventListener('click', () => {
+    user = { name: 'Invitado', email: 'invitado@ecovolt.co', guest: true, demo: false };
+    store.set(user);
+    enterApp();
+    toast('Modo invitado activo');
+  });
+
+  $('#forgotBtn').addEventListener('click', () => {
+    toast('Prototipo: la recuperación de contraseña se simula');
+    setAuthMsg('Simulación: te enviaríamos un enlace al correo indicado.', true);
+  });
+
+  $$('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => setMode(tab.dataset.mode));
+  });
+
+  $('#passToggle').addEventListener('click', () => {
+    const input = $('#authPass');
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    $('#passToggle').setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
+  });
+
+  $('#logoutBtn').addEventListener('click', logout);
+  $('#logoutBtn2').addEventListener('click', logout);
+  $('#profileBtn').addEventListener('click', () => navigate('contacto'));
+  $('#menuTrigger').addEventListener('click', openDrawer);
+  $('#sbClose').addEventListener('click', closeDrawer);
+  $('#scrim').addEventListener('click', closeDrawer);
+
+  /* ---------------- Paso a paso ---------------- */
+  const CHECK = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  const SUN_ICON = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>';
+  const FAN_ICON = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.5-5 4-5s4 2 4 4.5-2 4.5-5 4.5c-3.5 0-7-2-7-6"/><circle cx="12" cy="12" r="1"/><path d="M8 20c-2 0-3-1-3-3"/></svg>';
+  const WAVE_ICON = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 19c2.5 0 2.5-5 5-5s2.5 5 5 5 2.5-5 5-5"/><path d="M3 12c2.5 0 2.5-5 5-5s2.5 5 5 5 2.5-5 5-5"/></svg>';
+  const HOME_ICON = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/><path d="M9.5 21v-6h5v6"/></svg>';
+
+  const STEPS = [
+    {
+      title: 'Captación solar',
+      text: 'Los paneles solares reciben la luz del sol y generan electricidad para el sistema.',
+      icon: SUN_ICON,
+      bullets: ['Genera electricidad durante el día.', 'Alimenta el ventilador del circuito.', 'Reduce la energía tomada de la red.']
+    },
+    {
+      title: 'Movimiento del aire',
+      text: 'El ventilador impulsa el aire exterior a través de los conductos.',
+      icon: FAN_ICON,
+      bullets: ['Toma aire del exterior.', 'Lo empuja por el circuito de tubos.', 'Mantiene un caudal constante.']
+    },
+    {
+      title: 'Intercambio de calor',
+      text: 'El aire circula por los tubos enterrados y puede enfriarse al intercambiar calor con el suelo.',
+      icon: WAVE_ICON,
+      bullets: ['El suelo se mantiene cerca de 24 °C.', 'El aire cede calor al terreno.', 'La temperatura baja antes de entrar.']
+    },
+    {
+      title: 'Entrada a la vivienda',
+      text: 'El aire llega al interior para mejorar la ventilación y la comodidad.',
+      icon: HOME_ICON,
+      bullets: ['Entra por rejillas y difusores.', 'Renueva el aire interior.', 'Mejora el confort en horas de calor.']
+    }
+  ];
+
+  let stepIndex = 0;
+
+  function renderStep(index) {
+    stepIndex = (index + STEPS.length) % STEPS.length;
+    const step = STEPS[stepIndex];
+    $('#stepTitle').textContent = step.title;
+    $('#stepText').textContent = step.text;
+    $('#stepVisual').innerHTML = step.icon + '<small>Paso ' + (stepIndex + 1) + ' de 4</small>';
+    $('#stepList').innerHTML = step.bullets.map(b => '<li>' + CHECK + '<span>' + b + '</span></li>').join('');
+    $$('.step-btn').forEach((btn, i) => btn.setAttribute('aria-selected', i === stepIndex ? 'true' : 'false'));
+  }
+
+  $$('.step-btn').forEach(btn => {
+    btn.addEventListener('click', () => renderStep(Number(btn.dataset.step)));
+  });
+  $('#stepPrev').addEventListener('click', () => renderStep(stepIndex - 1));
+  $('#stepNext').addEventListener('click', () => renderStep(stepIndex + 1));
+
+  /* ---------------- Simulador ---------------- */
+  const simText = $('#simText');
+  const simHum = $('#simHum');
+  const simLen = $('#simLen');
+  const simHours = $('#simHours');
+  const nf = new Intl.NumberFormat('es-CO');
+  const cop = value => '$' + nf.format(Math.round(value));
+
+  function updateSim() {
+    const t = Number(simText.value);
+    const h = Number(simHum.value);
+    const len = Number(simLen.value);
+    const hours = Number(simHours.value);
+
+    $('#outText').textContent = t + ' °C';
+    $('#outHum').textContent = h + ' %';
+    $('#outLen').textContent = len + ' m';
+    $('#outHours').textContent = hours + ' h';
+
+    let eff = Math.min(0.75, 0.15 + 0.03 * len);
+    eff *= (1 - Math.max(0, h - 50) / 250);
+    eff = Math.max(0.08, eff);
+
+    const drop = Math.max(0, (t - 24) * eff);
+    const out = t - drop;
+
+    $('#resOut').textContent = out.toFixed(1).replace('.', ',');
+    $('#resDelta').textContent = '−' + drop.toFixed(1).replace('.', ',') + ' °C frente al aire exterior';
+    $('#resIn').textContent = t + ' °C';
+    $('#resEff').textContent = Math.round(eff * 100) + ' %';
+
+    const kwh = 45 * hours * 30 / 1000;
+    const cost = kwh * 750;
+    const acKwh = 1100 * hours * 30 / 1000;
+    const save = Math.max(0, acKwh * 750 - cost);
+    $('#resKwh').textContent = kwh.toFixed(1).replace('.', ',') + ' kWh/mes';
+    $('#resCost').textContent = cop(cost);
+    $('#resSave').textContent = cop(save) + '/mes';
+
+    const badge = $('#resBadge');
+    badge.className = 'badge';
+    if (drop >= 4) {
+      badge.textContent = 'Buen potencial';
+    } else if (drop >= 2) {
+      badge.textContent = 'Potencial moderado';
+      badge.classList.add('warn');
+    } else {
+      badge.textContent = 'Poco enfriamiento';
+      badge.classList.add('bad');
+    }
+
+    const tips = [];
+    if (h >= 80) tips.push('La humedad es alta: prioriza drenaje, filtros secos y revisa la condensación en los tubos.');
+    if (len < 12) tips.push('Con menos de 12 m de tubo hay poco contacto con el suelo; alarga el recorrido si el patio lo permite.');
+    if (t - 24 < 2) tips.push('La diferencia entre el aire y el suelo es mínima: el sistema ventila, pero enfría poco.');
+    if (!tips.length) tips.push('Configuración razonable para un piloto: el tubo es suficientemente largo y la humedad es manejable.');
+    $('#resHint').textContent = tips.join(' ');
+
+    lastSim = { t: t, out: out, len: len, hum: h, hours: hours, drop: drop };
+  }
+
+  [simText, simHum, simLen, simHours].forEach(input => {
+    input.addEventListener('input', updateSim);
+  });
+
+  $('#simReset').addEventListener('click', () => {
+    simText.value = 31;
+    simHum.value = 75;
+    simLen.value = 18;
+    simHours.value = 8;
+    updateSim();
+    toast('Valores restablecidos');
+  });
+
+  $('#simSave').addEventListener('click', () => {
+    if (!lastSim) updateSim();
+    const s = lastSim;
+    $('#cInterest').value = 'Instalación piloto';
+    $('#profileInterest').textContent = 'Instalación piloto';
+    $('#cMessage').value = 'Simulación: aire exterior ' + s.t + ' °C, salida estimada ' +
+      s.out.toFixed(1).replace('.', ',') + ' °C, tubo de ' + s.len + ' m, humedad ' + s.hum +
+      ' %, ' + s.hours + ' h de uso al día. Quiero evaluar una instalación piloto.';
+    navigate('contacto');
+    toast('Simulación añadida a tu solicitud');
+  });
+
+  /* ---------------- Contacto ---------------- */
+  function setContactMsg(text) {
+    $('#contactMsg').textContent = text || '';
+  }
+
+  function fillMyData() {
+    if (!user) return;
+    if (user.name !== 'Invitado') $('#cName').value = user.name;
+    if (!user.guest) $('#cEmail').value = user.email;
+    setContactMsg('');
+    toast('Datos de la sesión cargados');
+  }
+
+  $('#useMyData').addEventListener('click', fillMyData);
+
+  $('#cInterest').addEventListener('change', event => {
+    $('#profileInterest').textContent = event.target.value;
+  });
+
+  $('#contactForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('#cName').value.trim();
+    const email = $('#cEmail').value.trim();
+    const interest = $('#cInterest').value;
+    const message = $('#cMessage').value.trim();
+    const consent = $('#cConsent').checked;
+    const problems = [];
+
+    if (name.length < 2) problems.push('escribe tu nombre');
+    if (!EMAIL_RE.test(email)) problems.push('revisa el correo electrónico');
+    if (message.length < 10) problems.push('cuéntanos un poco más (10 caracteres mínimo)');
+    if (!consent) problems.push('marca la casilla de aceptación');
+
+    if (problems.length) {
+      setContactMsg('No pudimos registrar la solicitud: ' + problems.join(' · ') + '.');
+      return;
+    }
+
+    setContactMsg('');
+    $('#successSummary').innerHTML =
+      '<div><span>Nombre</span><b>' + escapeHtml(name) + '</b></div>' +
+      '<div><span>Correo</span><b>' + escapeHtml(email) + '</b></div>' +
+      '<div><span>Interés</span><b>' + escapeHtml(interest) + '</b></div>' +
+      '<div><span>Mensaje</span><b>' + escapeHtml(message.slice(0, 90)) + (message.length > 90 ? '…' : '') + '</b></div>' +
+      (lastSim ? '<div><span>Simulación</span><b>' + lastSim.t + ' °C → ' + lastSim.out.toFixed(1).replace('.', ',') + ' °C</b></div>' : '');
+
+    $('#contactCard').hidden = true;
+    $('#contactSuccess').hidden = false;
+    $('#contactSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast('Solicitud registrada (simulación)');
+  });
+
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  }
+
+  $('#anotherRequest').addEventListener('click', () => {
+    $('#contactForm').reset();
+    $('#cInterest').value = 'Instalación piloto';
+    $('#profileInterest').textContent = 'Instalación piloto';
+    $('#contactSuccess').hidden = true;
+    $('#contactCard').hidden = false;
+    renderUser();
+    setContactMsg('');
+    $('#cName').focus();
+  });
+
+  $('#editProfile').addEventListener('click', () => {
+    $('#cName').focus();
+    toast('Puedes editar tus datos en el formulario');
+  });
+
+  /* ---------------- Guía y eventos globales ---------------- */
+  function closeGuide() {
+    if (typeof guideDialog.close === 'function') guideDialog.close();
+    else guideDialog.removeAttribute('open');
+  }
+  $('#guideBtn').addEventListener('click', () => {
+    if (typeof guideDialog.showModal === 'function') guideDialog.showModal();
+    else guideDialog.setAttribute('open', '');
+  });
+  $('#guideClose').addEventListener('click', closeGuide);
+
+  document.addEventListener('click', event => {
+    const target = event.target.closest('[data-nav]');
+    if (!target) return;
+    event.preventDefault();
+    if (guideDialog.open) closeGuide();
+    navigate(target.dataset.nav);
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (user) go(screenFromHash(), false);
+  });
+
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeDrawer();
+  });
+
+  /* ---------------- Animaciones ---------------- */
+  const MOTION_KEY = 'ecovolt.motion.v1';
+  let motionPref = null;
+  try { motionPref = localStorage.getItem(MOTION_KEY); } catch (e) { motionPref = null; }
+  if (motionPref !== 'on' && motionPref !== 'off') motionPref = 'on';
+
+  function applyMotion(pref) {
+    motionPref = pref;
+    document.documentElement.classList.toggle('motion-off', pref === 'off');
+    const btn = $('#motionBtn');
+    if (btn) {
+      btn.setAttribute('aria-pressed', pref === 'on' ? 'true' : 'false');
+      btn.title = pref === 'on' ? 'Desactivar animaciones' : 'Activar animaciones';
+    }
+    try { localStorage.setItem(MOTION_KEY, pref); } catch (e) { /* sin almacenamiento */ }
+  }
+
+  applyMotion(motionPref);
+
+  $('#motionBtn').addEventListener('click', () => {
+    const next = motionPref === 'on' ? 'off' : 'on';
+    applyMotion(next);
+    toast(next === 'on' ? 'Animaciones activadas' : 'Animaciones desactivadas');
+  });
+
+  /* ---------------- Arranque ---------------- */
+  setMode('login');
+  renderStep(0);
+  updateSim();
+
+  if (user) enterApp();
+  else showAuth();
+})();
+</script>
+</body>
+</html>
